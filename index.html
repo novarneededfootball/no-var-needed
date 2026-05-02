@@ -1,0 +1,831 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08131E;
+    --surface: #0F1F2E;
+    --surface2: #152636;
+    --border: #1D3348;
+    --accent: #00E5FF;
+    --accent2: #FF3A5C;
+    --text: #E8EDF2;
+    --muted: #4E6A80;
+    --dim: #28455C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .site {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* BREAKING TICKER */
+  .breaking {
+    background: var(--accent2);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 7px 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .breaking strong {
+    background: rgba(0,0,0,0.25);
+    padding: 1px 8px;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+
+  /* NAV TOP */
+  .nav-top {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .nav-logo span {
+    color: var(--accent);
+    position: relative;
+  }
+  .nav-logo span::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+  }
+
+  /* TABS */
+  .nav-tabs {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    scrollbar-width: none;
+    background: var(--surface);
+    gap: 2px;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 14px 10px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+  }
+
+  /* PAGES */
+  .page { display: none; padding: 24px 24px 40px; }
+  .page.active { display: block; }
+
+  /* LEAGUE BANNER */
+  .league-banner {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 20px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .league-banner::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.06);
+    transform: rotate(25deg) skewX(-10deg);
+    pointer-events: none;
+  }
+  .league-banner::after {
+    content: '';
+    position: absolute;
+    top: 10px; right: 40px;
+    width: 80px; height: 160px;
+    background: rgba(255,255,255,0.04);
+    transform: rotate(25deg) skewX(-10deg);
+    pointer-events: none;
+  }
+  .league-logo-circle {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,255,255,0.35);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .league-logo-circle svg { width: 40px; height: 40px; }
+  .league-banner-text h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .league-banner-text p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* DESCRIPTION CARD */
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+  }
+  .about-card h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .about-card p {
+    font-size: 14px;
+    color: #8AABB8;
+    line-height: 1.75;
+    margin-bottom: 0;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+
+  /* SCORES */
+  .scores-row { display: flex; gap: 10px; margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; }
+  .scores-row::-webkit-scrollbar { display: none; }
+  .score-pill {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s;
+  }
+  .score-pill:hover { border-color: var(--dim); }
+  .score-pill .teams { display: flex; flex-direction: column; gap: 4px; font-weight: 500; font-size: 13px; color: var(--text); }
+  .score-pill .scores { display: flex; flex-direction: column; gap: 4px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); }
+  .live-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--accent2);
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+  .fin-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--surface2);
+    color: var(--muted);
+    padding: 3px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+
+  /* SKELETON ELEMENTS */
+  .line { background: var(--surface2); border-radius: 3px; margin-bottom: 6px; }
+  .skel-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  /* STANDINGS */
+  .standings-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .standings-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .standings-row:last-child { border-bottom: none; }
+  .pos {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    width: 18px;
+    text-align: center;
+  }
+  .team-dot { width: 22px; height: 22px; background: var(--surface2); border-radius: 50%; flex-shrink: 0; }
+  .team-name-skel { flex: 1; height: 10px; background: var(--surface2); border-radius: 3px; }
+  .pts {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* SIDE ARTICLES */
+  .side-stack { display: flex; flex-direction: column; gap: 10px; }
+  .side-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+  }
+  .thumb-skel { width: 54px; height: 54px; background: var(--surface2); border-radius: 6px; flex-shrink: 0; }
+
+  /* CARDS */
+  .card-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-img-skel { height: 80px; background: var(--surface2); }
+  .card-body-skel { padding: 12px; }
+
+  /* HERO */
+  .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-bottom: 22px; }
+  .hero-main { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .hero-img-skel { background: var(--surface2); height: 180px; display: flex; align-items: center; justify-content: center; }
+  .hero-img-skel span { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .hero-body { padding: 16px; }
+  .tag-skel {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent2);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  /* FEATURED MATCH */
+  .featured-match {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .featured-match::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .match-teams { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 14px 0; }
+  .match-team {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .match-score {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .match-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* WORLD CUP GROUPS */
+  .wc-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+  .group-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .group-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .group-team { font-size: 12px; color: #8AABB8; padding: 4px 0; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .group-team:last-child { border-bottom: none; }
+
+  /* ABOUT PAGE */
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .team-member { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), #7B1A2A);
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .team-member p { font-size: 12px; color: var(--muted); }
+
+  /* CONTACT */
+  .contact-skel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+  .contact-skel h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+  }
+  .input-skel { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; height: 38px; margin-bottom: 10px; width: 100%; }
+  .textarea-skel { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; height: 90px; margin-bottom: 12px; width: 100%; }
+  .btn-burg {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-burg:hover { opacity: 0.85; }
+
+  /* ── RESPONSIVE ── */
+
+  /* PAGE CONTENT: constrain content width on very wide screens */
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .nav-top { max-width: 1400px; margin: 0 auto; }
+
+  /* LARGE DESKTOP — 1200px+ */
+  @media (min-width: 1200px) {
+    .page { padding: 32px 48px 56px; }
+    .nav-top { padding: 18px 48px 16px; }
+    .nav-tabs { padding: 0 48px; }
+    .league-banner { height: 130px; padding: 0 36px; gap: 24px; margin-bottom: 28px; }
+    .league-logo-circle { width: 80px; height: 80px; }
+    .league-logo-circle svg { width: 50px; height: 50px; }
+    .league-banner-text h2 { font-size: 36px; }
+    .league-banner-text p { font-size: 14px; }
+    .nav-logo { font-size: 30px; }
+    .nav-tab { font-size: 14px; padding: 14px 18px 12px; }
+    .grid3 { grid-template-columns: repeat(4, 1fr); }
+    .wc-groups { grid-template-columns: repeat(4, 1fr); }
+    .hero-grid { grid-template-columns: 1.4fr 1fr; gap: 20px; }
+    .hero-img-skel { height: 240px; }
+    .match-score { font-size: 48px; }
+    .match-team { font-size: 24px; }
+    .section-title { font-size: 14px; }
+    .about-card p { font-size: 15px; }
+    .two-col { gap: 20px; }
+  }
+
+  /* STANDARD DESKTOP — 900px to 1200px */
+  @media (min-width: 900px) and (max-width: 1199px) {
+    .page { padding: 28px 36px 48px; }
+    .nav-top { padding: 16px 36px 14px; }
+    .nav-tabs { padding: 0 36px; }
+    .grid3 { grid-template-columns: repeat(3, 1fr); }
+    .wc-groups { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* TABLET — 600px to 899px */
+  @media (max-width: 899px) {
+    .page { padding: 20px 20px 40px; }
+    .nav-top { padding: 14px 20px 12px; }
+    .nav-tabs { padding: 0 20px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-img-skel { height: 180px; }
+    .wc-groups { grid-template-columns: repeat(2, 1fr); }
+    .grid3 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* MOBILE — up to 600px */
+  @media (max-width: 599px) {
+    .breaking { font-size: 11px; padding: 6px 14px; }
+    .nav-top { padding: 12px 16px 10px; }
+    .nav-logo { font-size: 21px; }
+    .nav-tabs { padding: 0 12px; }
+    .nav-tab { font-size: 11px; padding: 10px 10px 8px; }
+    .page { padding: 16px 16px 36px; }
+    .league-banner { height: 90px; padding: 0 18px; gap: 14px; margin-bottom: 18px; }
+    .league-logo-circle { width: 54px; height: 54px; }
+    .league-logo-circle svg { width: 34px; height: 34px; }
+    .league-banner-text h2 { font-size: 22px; }
+    .league-banner-text p { font-size: 11px; margin-top: 3px; }
+    .about-card { padding: 16px 18px; }
+    .about-card p { font-size: 13px; }
+    .two-col { grid-template-columns: 1fr; }
+    .grid3 { grid-template-columns: repeat(2, 1fr); }
+    .wc-groups { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-img-skel { height: 140px; }
+    .match-score { font-size: 32px; }
+    .match-team { font-size: 16px; }
+    .match-teams { gap: 14px; }
+    .featured-match { padding: 18px; }
+    .standings-skel { padding: 12px; }
+    .score-pill { padding: 10px 12px; gap: 10px; }
+    .score-pill .teams { font-size: 12px; }
+  }
+
+  /* VERY SMALL — up to 380px */
+  @media (max-width: 380px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .league-banner-text h2 { font-size: 18px; }
+    .nav-tab { font-size: 10px; padding: 10px 8px 8px; }
+    .wc-groups { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="site">
+  <div class="breaking"><strong>Breaking</strong> Real Madrid confirm signing of 19-year-old wonderkid — press conference at 3pm</div>
+  <div class="nav-top"><div class="nav-logo">No VAR <span>Needed</span></div></div>
+  <div class="nav-tabs" id="tabs">
+    <div class="nav-tab active" data-tab="home">Home</div>
+    <div class="nav-tab" data-tab="pl">Premier League</div>
+    <div class="nav-tab" data-tab="laliga">LaLiga</div>
+    <div class="nav-tab" data-tab="bundesliga">Bundesliga</div>
+    <div class="nav-tab" data-tab="seriea">Serie A</div>
+    <div class="nav-tab" data-tab="ligue1">Ligue 1</div>
+    <div class="nav-tab" data-tab="ucl">UCL</div>
+    <div class="nav-tab" data-tab="wc">World Cup</div>
+    <div class="nav-tab" data-tab="ks">Kategoria Superiore</div>
+    <div class="nav-tab" data-tab="about">About Us</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="skel-label">Live scores</div>
+    <div class="scores-row">
+      <div class="score-pill"><span class="live-badge">Live 74'</span><div class="teams"><span>Arsenal</span><span>Chelsea</span></div><div class="scores"><span>2</span><span>1</span></div></div>
+      <div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Man City</span><span>Liverpool</span></div><div class="scores"><span>3</span><span>3</span></div></div>
+      <div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>PSG</span><span>Barcelona</span></div><div class="scores"><span>1</span><span>2</span></div></div>
+    </div>
+    <div class="skel-label">Top story</div>
+    <div class="hero-grid">
+      <div class="hero-main">
+        <div class="hero-img-skel"><span>Featured image</span></div>
+        <div class="hero-body"><span class="tag-skel">UCL</span><div class="line" style="height:14px;width:90%;"></div><div class="line" style="height:14px;width:75%;"></div><div class="line" style="height:11px;width:60%;margin-top:10px;"></div></div>
+      </div>
+      <div class="side-stack">
+        <div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:10px;width:50%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:90%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+        <div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:10px;width:50%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:90%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+        <div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:10px;width:50%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:90%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      </div>
+    </div>
+    <div class="section-title">Latest stories</div>
+    <div class="grid3">
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+    </div>
+  </div>
+
+  <!-- PREMIER LEAGUE — purple #3D195B + cyan #00FF85 -->
+  <div class="page" id="pl">
+    <div class="league-banner" style="background: linear-gradient(135deg, #3D195B 0%, #1a0a2e 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="18" cy="10" rx="6" ry="7" fill="#00FF85"/>
+          <path d="M8 28 Q10 18 18 16 Q26 18 28 28 Q24 32 18 33 Q12 32 8 28Z" fill="#00FF85"/>
+          <circle cx="11" cy="14" r="2" fill="#3D195B"/>
+          <circle cx="25" cy="14" r="2" fill="#3D195B"/>
+          <path d="M13 22 Q18 26 23 22" stroke="#3D195B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M6 16 L4 20 L7 22" stroke="#00FF85" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <path d="M30 16 L32 20 L29 22" stroke="#00FF85" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Premier League</h2><p>England · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The Premier League is England's top football division, featuring 20 clubs competing from August to May. Renowned for its pace, physicality, and passionate crowds, it's consistently voted the world's most-watched domestic league. Founded in 1992, it attracts elite talent from every corner of the globe and produces some of football's most memorable moments week in, week out.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="live-badge">Live 61'</span><div class="teams"><span>Arsenal</span><span>Chelsea</span></div><div class="scores"><span>2</span><span>1</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Man City</span><span>Liverpool</span></div><div class="scores"><span>3</span><span>3</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">79</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">74</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">71</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">68</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">60</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div><div class="line" style="height:10px;width:30%;margin-top:6px;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- LALIGA — orange #FF4B00 + navy -->
+  <div class="page" id="laliga">
+    <div class="league-banner" style="background: linear-gradient(135deg, #FF4B00 0%, #c23700 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="5" width="26" height="26" rx="4" fill="white"/>
+          <path d="M10 26 L10 12 Q10 9 13 9 L16 9 Q19 9 19 12 L19 18 Q19 21 22 21 L26 21" stroke="#FF4B00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M19 18 L19 26" stroke="#FF4B00" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="27" cy="10" r="3" fill="#FF4B00"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>LaLiga</h2><p>Spain · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>LaLiga is Spain's top professional football division, home to some of the greatest clubs and players the sport has ever seen. With a history stretching back to 1929, it has produced legendary rivalries — none bigger than El Clásico between Real Madrid and Barcelona. Known for its tactical sophistication and technical brilliance, LaLiga has claimed more UEFA Champions League titles than any other domestic league.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Barcelona</span><span>Real Madrid</span></div><div class="scores"><span>2</span><span>2</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Atletico</span><span>Sevilla</span></div><div class="scores"><span>1</span><span>0</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">82</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">78</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">69</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">61</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">55</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- BUNDESLIGA — red #D3011D + black -->
+  <div class="page" id="bundesliga">
+    <div class="league-banner" style="background: linear-gradient(135deg, #D3011D 0%, #8a0010 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" fill="white"/>
+          <path d="M18 6 L21 14 L30 14 L23 20 L26 28 L18 23 L10 28 L13 20 L6 14 L15 14 Z" fill="#D3011D"/>
+          <circle cx="18" cy="18" r="4" fill="white"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Bundesliga</h2><p>Germany · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>Germany's Bundesliga is one of Europe's most exciting top flights, famous for its electric atmosphere, high-scoring matches, and some of the best attendances in world football. Founded in 1963, it has long been dominated by Bayern Munich, though clubs like Borussia Dortmund regularly challenge at the top. The Bundesliga is also celebrated for its commitment to fan culture and affordable ticket prices.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Bayern</span><span>Dortmund</span></div><div class="scores"><span>2</span><span>0</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Leverkusen</span><span>Leipzig</span></div><div class="scores"><span>1</span><span>1</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">77</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">70</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">64</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">58</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">52</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- SERIE A — navy #003087 + gold #E8C04A -->
+  <div class="page" id="seriea">
+    <div class="league-banner" style="background: linear-gradient(135deg, #003087 0%, #001a50 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="28" height="28" rx="3" fill="#E8C04A"/>
+          <text x="18" y="25" text-anchor="middle" font-size="16" font-weight="500" fill="#003087" font-family="sans-serif">A</text>
+          <rect x="4" y="4" width="28" height="6" rx="3" fill="#003087"/>
+          <rect x="4" y="26" width="28" height="6" rx="3" fill="#003087"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Serie A</h2><p>Italy · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>Serie A is Italy's premier football division and one of the most storied leagues in the world. Known for its defensive mastery, tactical depth, and iconic clubs like Juventus, Inter Milan, and AC Milan, the Italian top flight has shaped the game for decades. With passionate derbies and a rich tradition of producing world-class talent, Serie A remains a cornerstone of European football.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Inter</span><span>AC Milan</span></div><div class="scores"><span>2</span><span>1</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Juventus</span><span>Napoli</span></div><div class="scores"><span>0</span><span>1</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">80</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">73</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">67</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">60</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">54</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- LIGUE 1 — teal #00B2A9 + lime -->
+  <div class="page" id="ligue1">
+    <div class="league-banner" style="background: linear-gradient(135deg, #00897B 0%, #004D45 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="18,3 33,10 33,26 18,33 3,26 3,10" fill="#B3FF00"/>
+          <polygon points="18,9 27,13 27,23 18,27 9,23 9,13" fill="#00897B"/>
+          <text x="18" y="23" text-anchor="middle" font-size="9" font-weight="500" fill="#B3FF00" font-family="sans-serif">L1</text>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Ligue 1</h2><p>France · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>Ligue 1 is the top tier of French football, featuring 18 clubs battling it out from August to May. While Paris Saint-Germain have dominated the modern era thanks to massive investment, the league is also a renowned breeding ground for world-class talent — France's pipeline of young stars is among the best on the planet. Clubs like Marseille, Lyon, and Monaco bring history, passion, and genuine European ambition to the table.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>PSG</span><span>Marseille</span></div><div class="scores"><span>3</span><span>1</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Lyon</span><span>Monaco</span></div><div class="scores"><span>1</span><span>2</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">85</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">66</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">60</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">55</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">50</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- UCL — dark navy #0B1560 + gold -->
+  <div class="page" id="ucl">
+    <div class="league-banner" style="background: linear-gradient(135deg, #0B1560 0%, #050b35 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" fill="#D4AF37" opacity="0.15"/>
+          <path d="M18 5 L20 13 L28 13 L22 18 L24 26 L18 21 L12 26 L14 18 L8 13 L16 13 Z" fill="#D4AF37"/>
+          <path d="M12 26 L12 31 L18 29 L24 31 L24 26" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+          <rect x="10" y="31" width="16" height="2.5" rx="1.2" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>UEFA Champions League</h2><p>Europe · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The UEFA Champions League is the pinnacle of club football — an annual tournament pitting Europe's elite against each other in pursuit of the most coveted trophy in the game. From the spine-tingling anthem to the drama of knockout nights, the UCL delivers unmatchable spectacle. Real Madrid are the record holders with 15 titles, but every season a new story is written under the stars.</p>
+    </div>
+    <div class="featured-match">
+      <div class="match-meta">Semi-final · Second leg</div>
+      <div class="match-teams"><span class="match-team">Barcelona</span><span class="match-score">2 – 1</span><span class="match-team">PSG</span></div>
+      <div class="match-meta">FT · Agg: 3–2</div>
+    </div>
+    <div class="section-title">Latest articles</div>
+    <div class="grid3">
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+    </div>
+  </div>
+
+  <!-- WORLD CUP — FIFA navy + gold -->
+  <div class="page" id="wc">
+    <div class="league-banner" style="background: linear-gradient(135deg, #1a3a6b 0%, #0d1f40 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="13" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+          <ellipse cx="18" cy="18" rx="6" ry="13" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+          <line x1="5" y1="18" x2="31" y2="18" stroke="#D4AF37" stroke-width="1.2"/>
+          <path d="M7 11 Q18 14 29 11" stroke="#D4AF37" stroke-width="1" fill="none"/>
+          <path d="M7 25 Q18 22 29 25" stroke="#D4AF37" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>World Cup</h2><p>International · 2026 edition</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The FIFA World Cup is the biggest sporting event on Earth, held every four years and watched by billions across the globe. The 2026 edition is hosted jointly by the USA, Canada, and Mexico — the first World Cup ever to span three nations. With an expanded 48-team format, more countries than ever get their shot at glory. From group-stage shocks to penalty heartbreak in the final, nothing in football compares.</p>
+    </div>
+    <div class="section-title">Groups</div>
+    <div class="wc-groups">
+      <div class="group-card"><div class="group-title">Group A</div><div class="group-team">Brazil</div><div class="group-team">Germany</div><div class="group-team">Japan</div><div class="group-team">Morocco</div></div>
+      <div class="group-card"><div class="group-title">Group B</div><div class="group-team">France</div><div class="group-team">Argentina</div><div class="group-team">Mexico</div><div class="group-team">Senegal</div></div>
+      <div class="group-card"><div class="group-title">Group C</div><div class="group-team">England</div><div class="group-team">Spain</div><div class="group-team">USA</div><div class="group-team">Iran</div></div>
+      <div class="group-card"><div class="group-title">Group D</div><div class="group-team">Portugal</div><div class="group-team">Netherlands</div><div class="group-team">Ecuador</div><div class="group-team">Cameroon</div></div>
+    </div>
+    <div class="section-title">Latest articles</div>
+    <div class="grid3">
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+      <div class="card-skel"><div class="card-img-skel"></div><div class="card-body-skel"><div class="line" style="height:10px;width:40%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:95%;"></div><div class="line" style="height:12px;width:70%;"></div></div></div>
+    </div>
+  </div>
+
+  <!-- KATEGORIA SUPERIORE — Albanian red #E41E20 -->
+  <div class="page" id="ks">
+    <div class="league-banner" style="background: linear-gradient(135deg, #E41E20 0%, #8a0c0d 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="30" height="30" rx="3" fill="#E41E20"/>
+          <path d="M18 7 C18 7 13 12 13 16 C13 18.5 15 20 18 20 C21 20 23 18.5 23 16 C23 12 18 7 18 7Z" fill="black"/>
+          <path d="M13 20 L10 29 L18 24 L26 29 L23 20" fill="black"/>
+          <path d="M13 20 L10 29 L18 24 L26 29 L23 20" fill="black"/>
+          <circle cx="15" cy="15" r="1.5" fill="#E41E20"/>
+          <circle cx="21" cy="15" r="1.5" fill="#E41E20"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Kategoria Superiore</h2><p>Albania · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The Kategoria Superiore is the top division of Albanian football, featuring 10 clubs competing in a compact but fiercely contested season. Historic giants like SK Tirana, Skënderbeu, Partizani, and Vllaznia have shaped the league's identity over decades of passionate local derbies. The league may fly under the radar internationally, but for Albanian fans it's everything — raw, intense, and deeply felt.</p>
+    </div>
+    <div class="scores-row"><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Skënderbeu</span><span>Partizani</span></div><div class="scores"><span>1</span><span>1</span></div></div><div class="score-pill"><span class="fin-badge">FT</span><div class="teams"><span>Tirana</span><span>Vllaznia</span></div><div class="scores"><span>2</span><span>0</span></div></div></div>
+    <div class="two-col">
+      <div><div class="section-title">Standings</div><div class="standings-skel"><div class="standings-row"><span class="pos">1</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">68</span></div><div class="standings-row"><span class="pos">2</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">62</span></div><div class="standings-row"><span class="pos">3</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">57</span></div><div class="standings-row"><span class="pos">4</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">51</span></div><div class="standings-row"><span class="pos">5</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">44</span></div></div></div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack"><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div><div class="side-skel"><div class="thumb-skel"></div><div style="flex:1;"><div class="line" style="height:12px;width:90%;margin-bottom:6px;"></div><div class="line" style="height:12px;width:70%;"></div></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="page" id="about">
+    <div class="about-card">
+      <h2>Who we are</h2>
+      <p>No VAR Needed is a soccer news website run by a group of friends who love the game. We cover the biggest leagues in Europe, the Champions League, the World Cup — and yes, the Kategoria Superiore too.</p>
+      <p>No corporate agenda. No VAR delays. Just football, written by fans, for fans.</p>
+    </div>
+    <div class="about-card">
+      <h2>The team</h2>
+      <p style="margin-bottom:16px;">The writers and editors behind No VAR Needed.</p>
+      <div class="team-grid">
+        <div class="team-member"><div class="avatar">?</div><div class="line" style="height:11px;width:70%;margin:0 auto 6px;background:#1A2E40;border-radius:3px;"></div><p>Writer</p></div>
+        <div class="team-member"><div class="avatar">?</div><div class="line" style="height:11px;width:70%;margin:0 auto 6px;background:#1A2E40;border-radius:3px;"></div><p>Writer</p></div>
+        <div class="team-member"><div class="avatar">?</div><div class="line" style="height:11px;width:70%;margin:0 auto 6px;background:#1A2E40;border-radius:3px;"></div><p>Writer</p></div>
+      </div>
+    </div>
+    <div class="contact-skel">
+      <h2>Get in touch</h2>
+      <div class="input-skel"></div>
+      <div class="input-skel"></div>
+      <div class="textarea-skel"></div>
+      <div class="btn-burg">Send message</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('tabs').addEventListener('click', function(e) {
+    const tab = e.target.closest('.nav-tab');
+    if (!tab) return;
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+</script>
