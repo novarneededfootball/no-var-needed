@@ -1,0 +1,2647 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08131E;
+    --surface: #0F1F2E;
+    --surface2: #152636;
+    --border: #1D3348;
+    --accent: #00E5FF;
+    --accent2: #FF3A5C;
+    --text: #E8EDF2;
+    --muted: #4E6A80;
+    --dim: #28455C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .site {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* BREAKING TICKER */
+  .breaking {
+    background: var(--accent2);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 7px 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .breaking strong {
+    background: rgba(0,0,0,0.25);
+    padding: 1px 8px;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+
+  /* NAV TOP */
+  .nav-top {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .nav-logo span {
+    color: var(--accent);
+    position: relative;
+  }
+  .nav-logo span::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+  }
+
+  /* TABS */
+  .nav-tabs {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    scrollbar-width: none;
+    background: var(--surface);
+    gap: 2px;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 14px 10px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+  }
+
+  /* PAGES */
+  .page { display: none; padding: 24px 24px 40px; }
+  .page.active { display: block; }
+
+  /* ARTICLE CARDS */
+  .article-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+    display: flex;
+    flex-direction: column;
+  }
+  .article-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,229,255,0.08);
+  }
+  .article-card-img {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    flex-shrink: 0;
+  }
+  .article-card-body {
+    padding: 14px 16px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .article-card-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .article-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+  .article-card-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  /* SIDE ARTICLE CARDS */
+  .side-article {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .side-article:last-child { border-bottom: none; }
+  .side-article:hover { opacity: 0.75; }
+  .side-article-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .side-article-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .side-article-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 680px;
+    overflow: hidden;
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .modal-hero {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+  }
+  .modal-content { padding: 24px 28px 32px; }
+  .modal-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .modal-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-body p {
+    font-size: 15px;
+    color: #8AABB8;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    float: right;
+    margin: 16px 16px 0 0;
+    line-height: 1;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--dim); }
+
+  /* LEAGUE BANNER */
+  .league-banner {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 20px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .league-banner::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.06);
+    transform: rotate(25deg) skewX(-10deg);
+    pointer-events: none;
+  }
+  .league-banner::after {
+    content: '';
+    position: absolute;
+    top: 10px; right: 40px;
+    width: 80px; height: 160px;
+    background: rgba(255,255,255,0.04);
+    transform: rotate(25deg) skewX(-10deg);
+    pointer-events: none;
+  }
+  .league-logo-circle {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,255,255,0.35);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .league-logo-circle svg { width: 40px; height: 40px; }
+  .league-banner-text h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .league-banner-text p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* DESCRIPTION CARD */
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+  }
+  .about-card h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .about-card p {
+    font-size: 14px;
+    color: #8AABB8;
+    line-height: 1.75;
+    margin-bottom: 0;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+
+  /* SCORES */
+  .scores-row { display: flex; gap: 10px; margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; }
+  .scores-row::-webkit-scrollbar { display: none; }
+  .score-pill {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s;
+  }
+  .score-pill:hover { border-color: var(--dim); }
+  .score-pill .teams { display: flex; flex-direction: column; gap: 4px; font-weight: 500; font-size: 13px; color: var(--text); }
+  .score-pill .scores { display: flex; flex-direction: column; gap: 4px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); }
+  .live-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--accent2);
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+  .fin-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--surface2);
+    color: var(--muted);
+    padding: 3px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+
+  /* SKELETON ELEMENTS */
+  .line { background: var(--surface2); border-radius: 3px; margin-bottom: 6px; }
+  .skel-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  /* STANDINGS */
+  .standings-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .standings-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .standings-row:last-child { border-bottom: none; }
+
+  .standings-row-live {
+    display: grid;
+    grid-template-columns: 20px 4px 1fr 22px 22px 22px 22px 30px 28px;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 4px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .standings-row-live:last-child { border-bottom: none; }
+  .live-team-name { color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .live-stat { color: var(--muted); text-align: center; font-size: 11px; }
+  .pos {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    width: 18px;
+    text-align: center;
+  }
+  .team-dot { width: 22px; height: 22px; background: var(--surface2); border-radius: 50%; flex-shrink: 0; }
+  .team-name-skel { flex: 1; height: 10px; background: var(--surface2); border-radius: 3px; }
+  .pts {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .champion-badge {
+    text-align: center;
+    padding: 6px 4px 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    color: #D4AF37;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* SIDE ARTICLES */
+  .side-stack { display: flex; flex-direction: column; gap: 10px; }
+  .side-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+  }
+  .thumb-skel { width: 54px; height: 54px; background: var(--surface2); border-radius: 6px; flex-shrink: 0; }
+
+  /* CARDS */
+  .card-skel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-img-skel { height: 80px; background: var(--surface2); }
+  .card-body-skel { padding: 12px; }
+
+  /* HERO */
+  .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-bottom: 22px; }
+  .hero-main { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.18s, box-shadow 0.18s; }
+  .hero-main:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,229,255,0.08); }
+  .hero-img-skel { background: var(--surface2); height: 180px; display: flex; align-items: center; justify-content: center; }
+  .hero-img-skel span { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .hero-body { padding: 16px; }
+  .tag-skel {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent2);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  /* FEATURED MATCH */
+  .featured-match {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .featured-match::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .match-teams { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 14px 0; }
+  .match-team {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .match-score {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .match-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* WORLD CUP GROUPS */
+  .wc-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+  .group-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .group-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .group-team { font-size: 12px; color: #8AABB8; padding: 4px 0; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .group-team:last-child { border-bottom: none; }
+
+  /* WC GROUP LIVE STANDINGS */
+  .wc-standings-row {
+    display: grid;
+    grid-template-columns: 16px 1fr 18px 18px 18px 18px 24px 22px;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 2px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .wc-standings-row:last-child { border-bottom: none; }
+  .wc-standings-row .pos {
+    font-size: 11px;
+    width: 16px;
+  }
+  .wc-standings-row .live-team-name { font-size: 11px; }
+  .wc-standings-row .live-stat { font-size: 10px; }
+  .wc-standings-row .pts { font-size: 12px; }
+
+  /* ABOUT PAGE */
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .team-member { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), #7B1A2A);
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .team-member p { font-size: 12px; color: var(--muted); }
+
+  /* TEAM PHOTO PLACEHOLDER */
+  .team-photo-placeholder {
+    background: var(--bg);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .team-photo-icon { font-size: 40px; opacity: 0.5; }
+  .team-photo-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  /* CONTACT */
+  .contact-skel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+  .contact-skel h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+  }
+  .contact-input { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; height: 42px; margin-bottom: 10px; width: 100%; padding: 0 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.15s; }
+  .contact-input:focus { border-color: var(--accent); }
+  .contact-input::placeholder { color: var(--muted); }
+  .contact-textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; height: 110px; margin-bottom: 12px; width: 100%; padding: 10px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; resize: vertical; transition: border-color 0.15s; }
+  .contact-textarea:focus { border-color: var(--accent); }
+  .contact-textarea::placeholder { color: var(--muted); }
+  .btn-burg {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-burg:hover { opacity: 0.85; }
+
+  /* ── RESPONSIVE ── */
+
+  /* PAGE CONTENT: constrain content width on very wide screens */
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .nav-top { max-width: 1400px; margin: 0 auto; }
+
+  /* LARGE DESKTOP — 1200px+ */
+  @media (min-width: 1200px) {
+    .page { padding: 32px 48px 56px; }
+    .nav-top { padding: 18px 48px 16px; }
+    .nav-tabs { padding: 0 48px; }
+    .league-banner { height: 130px; padding: 0 36px; gap: 24px; margin-bottom: 28px; }
+    .league-logo-circle { width: 80px; height: 80px; }
+    .league-logo-circle svg { width: 50px; height: 50px; }
+    .league-banner-text h2 { font-size: 36px; }
+    .league-banner-text p { font-size: 14px; }
+    .nav-logo { font-size: 30px; }
+    .nav-tab { font-size: 14px; padding: 14px 18px 12px; }
+    .grid3 { grid-template-columns: repeat(4, 1fr); }
+    .wc-groups { grid-template-columns: repeat(4, 1fr); }
+    .hero-grid { grid-template-columns: 1.4fr 1fr; gap: 20px; }
+    .hero-img-skel { height: 240px; }
+    .match-score { font-size: 48px; }
+    .match-team { font-size: 24px; }
+    .section-title { font-size: 14px; }
+    .about-card p { font-size: 15px; }
+    .two-col { gap: 20px; }
+  }
+
+  /* STANDARD DESKTOP — 900px to 1200px */
+  @media (min-width: 900px) and (max-width: 1199px) {
+    .page { padding: 28px 36px 48px; }
+    .nav-top { padding: 16px 36px 14px; }
+    .nav-tabs { padding: 0 36px; }
+    .grid3 { grid-template-columns: repeat(3, 1fr); }
+    .wc-groups { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* TABLET — 600px to 899px */
+  @media (max-width: 899px) {
+    .page { padding: 20px 20px 40px; }
+    .nav-top { padding: 14px 20px 12px; }
+    .nav-tabs { padding: 0 20px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-img-skel { height: 180px; }
+    .wc-groups { grid-template-columns: repeat(2, 1fr); }
+    .grid3 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* MOBILE — up to 600px */
+  @media (max-width: 599px) {
+    .breaking { font-size: 11px; padding: 6px 14px; }
+    .nav-top { padding: 12px 16px 10px; }
+    .nav-logo { font-size: 21px; }
+    .nav-tabs { padding: 0 12px; }
+    .nav-tab { font-size: 11px; padding: 10px 10px 8px; }
+    .page { padding: 16px 16px 36px; }
+    .league-banner { height: 90px; padding: 0 18px; gap: 14px; margin-bottom: 18px; }
+    .league-logo-circle { width: 54px; height: 54px; }
+    .league-logo-circle svg { width: 34px; height: 34px; }
+    .league-banner-text h2 { font-size: 22px; }
+    .league-banner-text p { font-size: 11px; margin-top: 3px; }
+    .about-card { padding: 16px 18px; }
+    .about-card p { font-size: 13px; }
+    .two-col { grid-template-columns: 1fr; }
+    .grid3 { grid-template-columns: repeat(2, 1fr); }
+    .wc-groups { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-img-skel { height: 140px; }
+    .match-score { font-size: 32px; }
+    .match-team { font-size: 16px; }
+    .match-teams { gap: 14px; }
+    .featured-match { padding: 18px; }
+    .standings-skel { padding: 12px; }
+    .score-pill { padding: 10px 12px; gap: 10px; }
+    .score-pill .teams { font-size: 12px; }
+  }
+
+  /* VERY SMALL — up to 380px */
+  @media (max-width: 380px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .league-banner-text h2 { font-size: 18px; }
+    .nav-tab { font-size: 10px; padding: 10px 8px 8px; }
+    .wc-groups { grid-template-columns: 1fr 1fr; }
+  }
+
+
+      .ucl-bwrap { overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; }
+
+      /* The bracket is a flex row of alternating [round-col] [conn-col] */
+      .ucl-b {
+        display: flex;
+        align-items: stretch;
+        min-width: 900px;
+        /* Fixed height so every round column is the same height — cards positioned inside proportionally */
+        height: 700px;
+      }
+
+      /* Round column */
+      .ucl-rc {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+      }
+      .ucl-rc-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: center;
+        padding: 0 4px 7px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      /* The slots area fills remaining height, uses flex space-around so cards spread evenly */
+      .ucl-slots {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 6px 0;
+      }
+
+      /* Connector column — narrow, holds the SVG */
+      .ucl-conn {
+        width: 28px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .ucl-conn-title-gap {
+        /* matches the title height so SVG aligns with slots */
+        height: 24px;
+        flex-shrink: 0;
+      }
+      .ucl-conn svg {
+        flex: 1;
+        width: 28px;
+        display: block;
+        overflow: visible;
+      }
+
+      /* Match card */
+      .ucl-card {
+        background: #131f2e;
+        border: 1px solid #1e3347;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 0 4px;
+      }
+      .ucl-card-hdr {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0;
+        padding: 2px 8px 1px;
+        border-bottom: 1px solid #1a2e40;
+      }
+      .ucl-lbl {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--muted);
+        width: 22px;
+        text-align: center;
+      }
+      .ucl-row {
+        display: grid;
+        grid-template-columns: 1fr 22px 22px;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 8px;
+        border-bottom: 1px solid #1a2e40;
+        min-height: 26px;
+      }
+      
+      .ucl-row:last-of-type { border-bottom: none; }
+      .ucl-tname {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ucl-sc {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        text-align: center;
+      }
+      .ucl-row.w .ucl-tname { color: var(--accent); font-weight: 700; }
+      .ucl-row.w .ucl-sc    { color: var(--accent); }
+      .ucl-row.l .ucl-tname { color: var(--muted); }
+      .ucl-row.l .ucl-sc    { color: var(--muted); }
+      .ucl-agg {
+        font-size: 9px;
+        color: var(--muted);
+        text-align: center;
+        padding: 2px 8px 3px;
+        background: #0d1a26;
+      }
+      .ucl-card.gold { border-color: #D4AF37; box-shadow: 0 0 14px rgba(212,175,55,0.15); }
+      .ucl-card.gold .ucl-lbl { color: #D4AF37; }
+      .ucl-card.gold .ucl-agg { color: #D4AF37; }
+    
+</style>
+
+<div class="site">
+  <div class="breaking"><strong>Breaking</strong> Real Madrid confirm signing of 19-year-old wonderkid — press conference at 3pm</div>
+  <div class="nav-top"><div class="nav-logo">No VAR <span>Needed</span></div></div>
+  <div class="nav-tabs" id="tabs">
+    <div class="nav-tab active" data-tab="home">Home</div>
+    <div class="nav-tab" data-tab="pl">Premier League</div>
+    <div class="nav-tab" data-tab="laliga">LaLiga</div>
+    <div class="nav-tab" data-tab="bundesliga">Bundesliga</div>
+    <div class="nav-tab" data-tab="seriea">Serie A</div>
+    <div class="nav-tab" data-tab="ligue1">Ligue 1</div>
+    <div class="nav-tab" data-tab="ucl">UCL</div>
+    <div class="nav-tab" data-tab="wc">World Cup</div>
+    <div class="nav-tab" data-tab="ks">Kategoria Superiore</div>
+    <div class="nav-tab" data-tab="about">About Us</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="skel-label">Live scores <span id="scores-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+    <div class="scores-row" id="home-scores-row">
+      <div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div>
+    </div>
+    <div id="home-hero-section" style="display:none;">
+      <div class="skel-label">Top story</div>
+      <div class="hero-grid" id="home-hero-wrap"></div>
+    </div>
+    <div id="home-latest-section" style="display:none;">
+      <div class="section-title">Latest stories</div>
+      <div class="grid3" id="home-grid"></div>
+    </div>
+    <div id="home-empty" style="display:none;padding:40px 0;text-align:center;color:var(--muted);font-size:14px;">No articles yet — check back soon.</div>
+  </div>
+
+  <!-- PREMIER LEAGUE — purple #3D195B + cyan #00FF85 -->
+  <div class="page" id="pl">
+    <div class="league-banner" style="background: linear-gradient(135deg, #3D195B 0%, #1a0a2e 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="18" cy="10" rx="6" ry="7" fill="#00FF85"/>
+          <path d="M8 28 Q10 18 18 16 Q26 18 28 28 Q24 32 18 33 Q12 32 8 28Z" fill="#00FF85"/>
+          <circle cx="11" cy="14" r="2" fill="#3D195B"/>
+          <circle cx="25" cy="14" r="2" fill="#3D195B"/>
+           <!-- BANANA LAMP -->
+          <path d="M13 22 Q18 26 23 22" stroke="#3D195B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M6 16 L4 20 L7 22" stroke="#00FF85" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <path d="M30 16 L32 20 L29 22" stroke="#00FF85" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+       <!-- BANANA LAMP -->
+      <div class="league-banner-text"><h2>Premier League</h2><p>England · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The Premier League is England's top football division, featuring 20 clubs competing from August to May. Renowned for its pace, physicality, and passionate crowds, it's consistently voted the world's most-watched domestic league. Founded in 1992, it attracts elite talent from every corner of the globe and produces some of football's most memorable moments week in, week out.</p>
+    </div>
+    <div class="scores-row" id="pl-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings <span id="pl-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+        <div id="pl-standings"><div class="standings-skel"><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div></div></div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="pl-articles"><div style="font-size:12px;color:var(--muted);padding:10px 0;">No articles yet.</div></div></div>
+    </div>
+  </div>
+ <!-- BANANA LAMP -->
+  <!-- LALIGA — orange #FF4B00 + navy -->
+  <div class="page" id="laliga">
+    <div class="league-banner" style="background: linear-gradient(135deg, #FF4B00 0%, #c23700 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="5" width="26" height="26" rx="4" fill="white"/>
+          <path d="M10 26 L10 12 Q10 9 13 9 L16 9 Q19 9 19 12 L19 18 Q19 21 22 21 L26 21" stroke="#FF4B00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M19 18 L19 26" stroke="#FF4B00" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="27" cy="10" r="3" fill="#FF4B00"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>LaLiga</h2><p>Spain · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>LaLiga is Spain's top professional football division, home to some of the greatest clubs and players the sport has ever seen. With a history stretching back to 1929, it has produced legendary rivalries — none bigger than El Clásico between Real Madrid and Barcelona. Known for its tactical sophistication and technical brilliance, LaLiga has claimed more UEFA Champions League titles than any other domestic league.</p>
+    </div>
+    <div class="scores-row" id="laliga-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings <span id="laliga-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+        <div id="laliga-standings"><div class="standings-skel"><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div></div></div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="laliga-articles"><div style="font-size:12px;color:var(--muted);padding:10px 0;">No articles yet.</div></div></div>
+    </div>
+  </div>
+
+  <!-- BUNDESLIGA — red #D3011D + black -->
+  <div class="page" id="bundesliga">
+    <div class="league-banner" style="background: linear-gradient(135deg, #D3011D 0%, #8a0010 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" fill="white"/>
+          <path d="M18 6 L21 14 L30 14 L23 20 L26 28 L18 23 L10 28 L13 20 L6 14 L15 14 Z" fill="#D3011D"/>
+          <circle cx="18" cy="18" r="4" fill="white"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Bundesliga</h2><p>Germany · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>Bundesliga? You mean Bayern Munich Liga right? Bayern Munich has won over 30 Bundesliga titles in its history and 13 of the past 15. If you're looking for a farmers league look no further! The Bundesliga is a truly perfect example of a farmers league.</p>
+    </div>
+     <!-- BANANA LAMP -->
+    <div class="scores-row" id="bundesliga-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings <span id="bundesliga-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+        <div id="bundesliga-standings"><div class="standings-skel"><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div></div></div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="bundesliga-articles"><div style="font-size:12px;color:var(--muted);padding:10px 0;">No articles yet.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SERIE A — navy #003087 + gold #E8C04A -->
+  <div class="page" id="seriea">
+    <div class="league-banner" style="background: linear-gradient(135deg, #003087 0%, #001a50 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="28" height="28" rx="3" fill="#E8C04A"/>
+          <text x="18" y="25" text-anchor="middle" font-size="16" font-weight="500" fill="#003087" font-family="sans-serif">A</text>
+          <rect x="4" y="4" width="28" height="6" rx="3" fill="#003087"/>
+          <rect x="4" y="26" width="28" height="6" rx="3" fill="#003087"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Serie A</h2><p>Italy · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>Serie A is Italy's premier football division and one of the most storied leagues in the world. Known for its defensive mastery, tactical depth, and iconic clubs like Juventus, Inter Milan, and AC Milan, the Italian top flight has shaped the game for decades. With passionate derbies and a rich tradition of producing world-class talent, Serie A remains a cornerstone of European football.</p>
+    </div>
+    <div class="scores-row" id="seriea-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings <span id="seriea-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+        <div id="seriea-standings"><div class="standings-skel"><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div><div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div></div></div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="seriea-articles"><div style="font-size:12px;color:var(--muted);padding:10px 0;">No articles yet.</div></div></div>
+    </div>
+  </div>
+ <!-- BANANA LAMP -->
+  <!-- LIGUE 1 — teal #00B2A9 + lime -->
+  <div class="page" id="ligue1">
+    <div class="league-banner" style="background: linear-gradient(135deg, #00897B 0%, #004D45 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="18,3 33,10 33,26 18,33 3,26 3,10" fill="#B3FF00"/>
+          <polygon points="18,9 27,13 27,23 18,27 9,23 9,13" fill="#00897B"/>
+          <text x="18" y="23" text-anchor="middle" font-size="9" font-weight="500" fill="#B3FF00" font-family="sans-serif">L1</text>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Ligue 1</h2><p>France · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The top tier of French football. Often overlooked in the Big 5 and considered a "farmer's league", Ligue 1 is an intense league with many rivalries stretching back decades (most notably Paris Saint-Germain and Olympique de Marseille) and never fails to deliver fascinating relegation and Europe races. </p>
+    </div>
+    <div class="scores-row" id="ligue1-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings <span id="ligue1-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+        <div id="ligue1-standings">
+          <div class="standings-skel">
+            <div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div>
+            <div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div>
+            <div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div>
+            <div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div>
+            <div class="standings-row"><span class="pos">–</span><div class="team-dot"></div><div class="team-name-skel"></div><span class="pts">–</span></div>
+          </div>
+           <!-- BANANA LAMP -->
+        </div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="ligue1-articles">
+        <div class="side-article" onclick="openStaticArticle('l1-side-1')">
+          <div class="side-article-thumb" style="background:#0a2e2a;">🟢</div>
+          <div><div class="side-article-title">PSG 3–1 Marseille: The Classique belongs to Paris — again</div><div class="side-article-meta">Match Report · 3 min read</div></div>
+        </div>
+        <div class="side-article" onclick="openStaticArticle('l1-side-2')">
+          <div class="side-article-thumb" style="background:#1a2a0a;">⚪</div>
+          <div><div class="side-article-title">Monaco's title push is the best story in French football</div><div class="side-article-meta">Feature · 4 min read</div></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+ <!-- BANANA LAMP -->
+  <!-- UCL — dark navy #0B1560 + gold -->
+  <div class="page" id="ucl">
+    <div class="league-banner" style="background: linear-gradient(135deg, #0B1560 0%, #050b35 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" fill="#D4AF37" opacity="0.15"/>
+          <path d="M18 5 L20 13 L28 13 L22 18 L24 26 L18 21 L12 26 L14 18 L8 13 L16 13 Z" fill="#D4AF37"/>
+          <path d="M12 26 L12 31 L18 29 L24 31 L24 26" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+          <rect x="10" y="31" width="16" height="2.5" rx="1.2" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>UEFA Champions League</h2><p>Europe · 2025/26 · Final: Budapest 30 May</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p> Iconic music, iconic rivalries, iconic scenarios. The UEFA Champions League can be described in one word: Iconic. With the new league phase format, it is now as competitive as ever. The Champions League games are the most important of the season (more important than going to class): in your own league you gain national glory, but here, here you can eternally engrave the name of your club into the trophy and history. </p>
+    </div>
+    
+
+    <div class="scores-row" id="ucl-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+
+    <div class="ucl-bwrap">
+      <div class="ucl-b" id="ucl-b">
+
+        <!-- ── ROUND OF 16 ── -->
+        <div class="ucl-rc">
+          <div class="ucl-rc-title">Round of 16</div>
+          <div class="ucl-slots">
+            <div class="ucl-card" id="r0">
+               <!-- BANANA LAMP -->
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">PSG</span><span class="ucl-sc">5</span><span class="ucl-sc">3</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Chelsea</span><span class="ucl-sc">2</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 8–2</div>
+            </div>
+             <div class="ucl-card" id="r4">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Liverpool</span><span class="ucl-sc">0</span><span class="ucl-sc">4</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Galatasaray</span><span class="ucl-sc">1</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 4–1</div>
+            </div>
+             <div class="ucl-card" id="r3">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Real Madrid</span><span class="ucl-sc">3</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Man City</span><span class="ucl-sc">0</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-agg">Aggregate: 5–1</div>
+            </div>
+            <div class="ucl-card" id="r6">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Bayern Munich</span><span class="ucl-sc">6</span><span class="ucl-sc">4</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Atalanta</span><span class="ucl-sc">1</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-agg">Aggregate: 10–2</div>
+            </div>
+            <div class="ucl-card" id="r7">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Barcelona</span><span class="ucl-sc">1</span><span class="ucl-sc">7</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Newcastle</span><span class="ucl-sc">1</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-agg">Aggregate: 8–3</div>
+            </div>
+             <div class="ucl-card" id="r5">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Atlético</span><span class="ucl-sc">5</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Tottenham</span><span class="ucl-sc">2</span><span class="ucl-sc">3</span></div>
+              <div class="ucl-agg">Aggregate: 7–5</div>
+            </div>
+              <div class="ucl-card" id="r2">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Sporting CP</span><span class="ucl-sc">0</span><span class="ucl-sc">5†</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Bodø/Glimt</span><span class="ucl-sc">3</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 5–3 (aet)</div>
+            </div>
+             <!-- BANANA LAMP -->
+            <div class="ucl-card" id="r1">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Arsenal</span><span class="ucl-sc">1</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Leverkusen</span><span class="ucl-sc">1</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 3–1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CONNECTOR R16→QF ── -->
+        <div class="ucl-conn" id="c1">
+          <div class="ucl-conn-title-gap"></div>
+          <svg id="svg-c1" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+
+        <!-- ── QUARTER-FINALS ── -->
+        <!-- Draw order matches bracket: r0+r4→q0, r1+r2→q1, r3+r6→q2, r5+r7→q3 -->
+        <div class="ucl-rc">
+          <div class="ucl-rc-title">Quarter-finals</div>
+          <div class="ucl-slots">
+            <div class="ucl-card" id="q0">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">PSG</span><span class="ucl-sc">2</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Liverpool</span><span class="ucl-sc">0</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 4–0</div>
+            </div>
+
+         <div class="ucl-card" id="q2">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Bayern Munich</span><span class="ucl-sc">2</span><span class="ucl-sc">4</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Real Madrid</span><span class="ucl-sc">1</span><span class="ucl-sc">3</span></div>
+              <div class="ucl-agg">Aggregate: 6–4</div>
+            </div>
+ <!-- BANANA LAMP -->
+          <div class="ucl-card" id="q3">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Atlético</span><span class="ucl-sc">2</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Barcelona</span><span class="ucl-sc">0</span><span class="ucl-sc">2</span></div>
+              <div class="ucl-agg">Aggregate: 3–2</div>
+            </div>
+            
+            <div class="ucl-card" id="q1">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Arsenal</span><span class="ucl-sc">1</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Sporting CP</span><span class="ucl-sc">0</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-agg">Aggregate: 1–0</div>
+            </div>
+            
+        
+          </div>
+        </div>
+
+        <!-- ── CONNECTOR QF→SF ── -->
+        <div class="ucl-conn" id="c2">
+          <div class="ucl-conn-title-gap"></div>
+        <svg id="svg-c2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 656">
+          <line x1="0" y1="569.0750350952148" x2="14" y2="569.0750350952148" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="0" y1="83.5250015258789" x2="14" y2="83.5250015258789" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="14" y1="83.5250015258789" x2="14" y2="245" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="14" y1="408" x2="14" y2="570" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="14" y1="164.45000457763672" x2="28" y2="164.45000457763672" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="0" y1="245.37499237060547" x2="14" y2="245.37499237060547" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="0" y1="407.2249984741211" x2="14" y2="407.2249984741211" stroke="#2a4a63" stroke-width="1.5"></line>
+          <line x1="14" y1="488.14998626708984" x2="28" y2="488.14998626708984" stroke="#2a4a63" stroke-width="1.5"></line></svg>
+        </div>
+         <!-- BANANA LAMP -->
+        <!-- ── SEMI-FINALS ── -->
+        <!-- q0+q1→s0, q2+q3→s1 -->
+        <div class="ucl-rc">
+          <div class="ucl-rc-title">Semi-finals</div>
+          <div class="ucl-slots">
+            <div class="ucl-card" id="s0">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">PSG</span><span class="ucl-sc">5</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Bayern Munich</span><span class="ucl-sc">4</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-agg">Aggregate: 6–5</div>
+            </div>
+            <div class="ucl-card" id="s1">
+              <div class="ucl-card-hdr"><span class="ucl-lbl">L1</span><span class="ucl-lbl">L2</span></div>
+              <div class="ucl-row l"><span class="ucl-tname">Atlético</span><span class="ucl-sc">1</span><span class="ucl-sc">0</span></div>
+              <div class="ucl-row w"><span class="ucl-tname">Arsenal</span><span class="ucl-sc">1</span><span class="ucl-sc">1</span></div>
+              <div class="ucl-agg">Aggregate: 2–1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CONNECTOR SF→F ── -->
+        <div class="ucl-conn" id="c3">
+          <div class="ucl-conn-title-gap"></div>
+          <svg id="svg-c3" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+ <!-- BANANA LAMP -->
+        <!-- ── FINAL ── -->
+        <div class="ucl-rc" style="max-width:155px;min-width:130px;">
+          <div class="ucl-rc-title">Final · Budapest</div>
+          <div class="ucl-slots" style="justify-content:center;">
+            <div>
+              <div class="ucl-card gold" id="f0">
+                <div class="ucl-row" style="grid-template-columns:1fr 22px;padding:6px 8px;"><span class="ucl-tname">PSG</span><span class="ucl-sc" style="color:var(--muted)">—</span></div>
+                <div class="ucl-row" style="grid-template-columns:1fr 22px;padding:6px 8px;"><span class="ucl-tname">Arsenal</span><span class="ucl-sc" style="color:var(--muted)">—</span></div>
+                <div class="ucl-agg">30 May 2026 · Budapest</div>
+              </div>
+              <div class="champion-badge" style="padding-top:8px;">🏆 TBD 🏆</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+    (function() {
+      // For each connector SVG, we know which "from" card ids feed which "to" card id.
+      // Lines: from right edge of fromCard → elbow → left edge of toCard
+      // The SVG spans the full height of the slots area (same height as the round columns).
+      // We use getBoundingClientRect relative to the SVG element.
+
+      const connections = [
+        // svg id, [[fromId, toId], ...]
+        ['svg-c1', [['r0','q0'],['r4','q0'],  ['r1','q1'],['r2','q1'],  ['r3','q2'],['r6','q2'],  ['r5','q3'],['r7','q3']]],
+        ['svg-c2', [['q0','s0'],['q1','s0'],  ['q2','s1'],['q3','s1']]],
+        ['svg-c3', [['s0','f0'],['s1','f0']]],
+      ];
+
+      function drawAll() {
+        connections.forEach(function([svgId, pairs]) {
+          const svg = document.getElementById(svgId);
+          if (!svg) return;
+          const sr = svg.getBoundingClientRect();
+          if (!sr.height) return;
+          svg.setAttribute('viewBox', '0 0 28 ' + sr.height);
+          svg.innerHTML = '';
+
+          // Group by toId so we can draw the vertical "spine" once per target
+          const byTo = {};
+          pairs.forEach(function([fromId, toId]) {
+            if (!byTo[toId]) byTo[toId] = [];
+            byTo[toId].push(fromId);
+          });
+          
+
+          Object.entries(byTo).forEach(function([toId, fromIds]) {
+            const toEl = document.getElementById(toId);
+            if (!toEl) return;
+            const toR = toEl.getBoundingClientRect();
+            const toY = toR.top + toR.height / 2 - sr.top;
+
+            // Collect fromY values
+            const fromYs = fromIds.map(function(fid) {
+              const el = document.getElementById(fid);
+              if (!el) return toY;
+              const r = el.getBoundingClientRect();
+              return r.top + r.height / 2 - sr.top;
+            });
+
+            const minY = Math.min(...fromYs);
+            const maxY = Math.max(...fromYs);
+            const midX = 14; // centre of 28px wide connector
+
+            // Draw a horizontal line from left edge to midX for each source card
+            fromYs.forEach(function(fy) {
+              const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+              line.setAttribute('x1','0'); line.setAttribute('y1', fy);
+              line.setAttribute('x2', midX); line.setAttribute('y2', fy);
+              line.setAttribute('stroke','#2a4a63'); line.setAttribute('stroke-width','1.5');
+              svg.appendChild(line);
+            });
+
+            // Vertical spine connecting all from-lines at midX
+            if (fromYs.length > 1) {
+              const spine = document.createElementNS('http://www.w3.org/2000/svg','line');
+              spine.setAttribute('x1', midX); spine.setAttribute('y1', minY);
+              spine.setAttribute('x2', midX); spine.setAttribute('y2', maxY);
+              spine.setAttribute('stroke','#2a4a63'); spine.setAttribute('stroke-width','1.5');
+              svg.appendChild(spine);
+            }
+
+            // Horizontal line from midX to right edge at toY
+            const out = document.createElementNS('http://www.w3.org/2000/svg','line');
+            out.setAttribute('x1', midX); out.setAttribute('y1', toY);
+            out.setAttribute('x2','28');  out.setAttribute('y2', toY);
+            out.setAttribute('stroke','#2a4a63'); out.setAttribute('stroke-width','1.5');
+            svg.appendChild(out);
+          });
+        });
+      }
+
+      // Wait for layout then draw; redraw on resize
+      requestAnimationFrame(function() { setTimeout(drawAll, 120); });
+      window.addEventListener('resize', drawAll);
+
+      // Also redraw when UCL tab is activated (cards have zero size until visible)
+      document.getElementById('tabs').addEventListener('click', function(e) {
+        if (e.target.dataset && e.target.dataset.tab === 'ucl') {
+          setTimeout(drawAll, 150);
+        }
+      });
+    })();
+    </script>
+
+    <div class="section-title">Latest articles</div>
+    <div class="grid3" id="ucl-grid">
+      <div class="article-card" onclick="openStaticArticle('ucl-1')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#0B1560,#1a2590);">🏆</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Match Report</div>
+          <div class="article-card-title">Barcelona 0–9 PSG: The most shocking night in UCL history</div>
+          <div class="article-card-meta">Champions League · 6 min read</div>
+        </div>
+      </div>
+      <div class="article-card" onclick="openStaticArticle('ucl-2')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#1a0b40,#0B1560);">⭐</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Analysis</div>
+          <div class="article-card-title">How Dembélé became the best player on the planet</div>
+          <div class="article-card-meta">Champions League · 5 min read</div>
+        </div>
+      </div>
+       <!-- BANANA LAMP -->
+      <div class="article-card" onclick="openStaticArticle('ucl-3')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#0d2040,#0B1560);">🎯</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Preview</div>
+          <div class="article-card-title">UCL Final preview: Is anyone stopping PSG?</div>
+          <div class="article-card-meta">Champions League · 4 min read</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page" id="wc">
+    <div class="league-banner" style="background: linear-gradient(135deg, #1a3a6b 0%, #0d1f40 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="13" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+          <ellipse cx="18" cy="18" rx="6" ry="13" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+          <line x1="5" y1="18" x2="31" y2="18" stroke="#D4AF37" stroke-width="1.2"/>
+          <path d="M7 11 Q18 14 29 11" stroke="#D4AF37" stroke-width="1" fill="none"/>
+          <path d="M7 25 Q18 22 29 25" stroke="#D4AF37" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>World Cup</h2><p>International · 2026 edition</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>The World Cup. 3 words is all you need to remind someone of his childhood dreams, his most intense memories, and football legend. The greatest sports event in modern history, taking place every 4 years puts you through every intense emotion in rapid succession. A rollercoaster that inspires people all over the world, makes dreams come true, and shatters others. The World Cup is not just an event, but legend writing itself before our eyes.</p>
+    </div>
+    <div class="scores-row" id="wc-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="section-title">Groups <span id="wc-standings-updated" style="font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;"></span></div>
+    <div class="wc-groups" id="wc-groups-container">
+      <!-- Live group standings injected here by JS -->
+      <div style="font-size:12px;color:var(--muted);padding:12px 0;grid-column:1/-1;">Loading groups…</div>
+    </div>
+     <!-- BANANA LAMP -->
+    <div class="section-title">Latest articles</div>
+    <div class="grid3" id="wc-grid">
+      <div class="article-card" onclick="openStaticArticle('wc-1')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#1a3a6b,#0d1f40);">🌍</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Preview</div>
+          <div class="article-card-title">2026 World Cup: Every group, ranked by intrigue</div>
+          <div class="article-card-meta">World Cup · 7 min read</div>
+        </div>
+      </div>
+      <div class="article-card" onclick="openStaticArticle('wc-2')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#0d2a50,#1a3a6b);">🇧🇷</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Feature</div>
+          <div class="article-card-title">Brazil vs Germany again: 12 years on, can the Seleção exorcise the ghost?</div>
+          <div class="article-card-meta">World Cup · 5 min read</div>
+        </div>
+      </div>
+      <div class="article-card" onclick="openStaticArticle('wc-3')">
+        <div class="article-card-img" style="background:linear-gradient(135deg,#1a3a6b,#2a1a50);">🐐</div>
+        <div class="article-card-body">
+          <div class="article-card-tag">Opinion</div>
+          <div class="article-card-title">This is Mbappé's World Cup to lose</div>
+          <div class="article-card-meta">World Cup · 4 min read</div>
+        </div>
+      </div>
+       <!-- BANANA LAMP -->
+    </div>
+  </div>
+  <div class="page" id="ks">
+    <div class="league-banner" style="background: linear-gradient(135deg, #E41E20 0%, #8a0c0d 100%);">
+      <div class="league-logo-circle">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="30" height="30" rx="3" fill="#E41E20"/>
+          <path d="M18 7 C18 7 13 12 13 16 C13 18.5 15 20 18 20 C21 20 23 18.5 23 16 C23 12 18 7 18 7Z" fill="black"/>
+          <path d="M13 20 L10 29 L18 24 L26 29 L23 20" fill="black"/>
+          <path d="M13 20 L10 29 L18 24 L26 29 L23 20" fill="black"/>
+          <circle cx="15" cy="15" r="1.5" fill="#E41E20"/>
+          <circle cx="21" cy="15" r="1.5" fill="#E41E20"/>
+        </svg>
+      </div>
+      <div class="league-banner-text"><h2>Kategoria Superiore</h2><p>Albania · 2025/26 season</p></div>
+    </div>
+    <div class="about-card" style="margin-bottom:20px;">
+      <p>We know what you're thinking, "What the hell is the Kategoria Superiore?" If you've never heard of it, you're in for a life-changing discovery. The Kategoria Superiore is the top Albanian football league with 10 teams participating. The little number of teams mean that they play each other 4 times per season leading to intense rivalries and, everybody's favorite, multiple red cards per game. But most importantly, Viva La Vllaznia!</p>
+    </div>
+    <div class="scores-row" id="ks-scores-row"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading scores…</div></div>
+    <div class="two-col">
+      <div>
+        <div class="section-title">Standings</div>
+        <div id="ks-standings-container"><div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading standings…</div></div>
+      </div>
+      <div><div class="section-title">Latest articles</div><div class="side-stack" id="ks-articles">
+        <div class="side-article" onclick="openStaticArticle('ks-side-1')">
+          <div class="side-article-thumb" style="background:#2e0a0a;">🦅</div>
+          <div><div class="side-article-title">Vllaznia 5–0 Tirana: The red-and-blues are unstoppable</div><div class="side-article-meta">Match Report · 3 min read</div></div>
+        </div>
+        <div class="side-article" onclick="openStaticArticle('ks-side-2')">
+          <div class="side-article-thumb" style="background:#0a1a0a;">🇦🇱</div>
+          <div><div class="side-article-title">Why the Kategoria Superiore is the world's most underrated league</div><div class="side-article-meta">Opinion · 5 min read</div></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <!-- BANANA LAMP -->
+
+  <!-- ARTICLE MODAL -->
+  <div class="modal-overlay" id="article-modal">
+    <div class="modal">
+      <div class="modal-close" onclick="closeArticle()">×</div>
+      <div class="modal-hero"></div>
+      <div class="modal-content">
+        <div class="modal-tag"></div>
+        <div class="modal-title"></div>
+        <div class="modal-meta"></div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="about">
+    <div class="about-card">
+      <h2>Who we are</h2>
+      <p>No VAR Needed is a soccer news website run by a group of friends who love the game. We cover the biggest leagues in Europe, the Champions League, the World Cup — and of coures, the best league of all, the Kategoria Superiore.</p>
+      <p>Football, written by fans, for fans.</p>
+       <p>P.S.: We're also a Banana Lamp Cult.</p>
+    </div>
+     <!-- BANANA LAMP -->
+    <div class="about-card">
+      
+      <h2>The team</h2>
+      <p style="margin-bottom:16px;">The writers and editors behind No VAR Needed.</p>
+      <div class="team-photo-placeholder">
+        <div class="team-photo-icon">📸</div>
+        <div class="team-photo-label">Team photo coming soon</div>
+      </div>
+    </div>
+    <div class="contact-skel">
+      <h2>Get in touch</h2>
+      <input class="contact-input" type="email" id="contact-email" placeholder="Your email address" />
+      <textarea class="contact-textarea" id="contact-message" placeholder="Your message"></textarea>
+      <div id="contact-feedback" style="font-size:13px;margin-bottom:10px;min-height:18px;"></div>
+      <div class="btn-burg" onclick="sendMessage()">Send message</div>
+    </div>
+ <!-- BANANA LAMP -->
+
+<script>
+  
+  // ---------------------------------------------------------------
+  // EMAIL SETUP — uses EmailJS (free, no backend needed).
+  // To activate:
+  //   1. Sign up at https://www.emailjs.com (free tier = 200 emails/month)
+  //   2. Add an Email Service (connect your Gmail) → copy the Service ID
+  //   3. Create an Email Template with variables {{from_email}} and {{message}}
+  //      and set the "To email" to novarneededfootball@gmail.com → copy Template ID
+  //   4. Go to Account → copy your Public Key
+  //   5. Paste all three values below.
+  // ---------------------------------------------------------------
+  const EMAILJS_PUBLIC_KEY  = 'zlJNKWcYV-04lccBS';
+  const EMAILJS_SERVICE_ID  = 'service_kd2hqlk';
+  const EMAILJS_TEMPLATE_ID = 'template_hf1c9f2';
+
+  if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  async function sendMessage() {
+    const email    = document.getElementById('contact-email').value.trim();
+    const message  = document.getElementById('contact-message').value.trim();
+    const feedback = document.getElementById('contact-feedback');
+    const btn      = document.querySelector('.btn-burg');
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      feedback.style.color = '#FF3A5C';
+      feedback.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    if (!message) {
+      feedback.style.color = '#FF3A5C';
+      feedback.textContent = 'Please write a message before sending.';
+      return;
+    }
+
+    btn.textContent = 'Sending…';
+    btn.style.opacity = '0.6';
+    btn.style.pointerEvents = 'none';
+    feedback.textContent = '';
+
+    try {
+      if (typeof emailjs === 'undefined') throw new Error('Email service unavailable');
+      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        from_email: email,
+        reply_to: email,
+        email: email,
+        message: message,
+        message_html: message,
+      });
+      console.log('EmailJS success:', result);
+      feedback.style.color = '#00E5FF';
+      feedback.textContent = '✓ Message sent! We\'ll get back to you soon.';
+      document.getElementById('contact-email').value = '';
+      document.getElementById('contact-message').value = '';
+    } catch (err) {
+      feedback.style.color = '#FF3A5C';
+      feedback.textContent = 'Something went wrong: ' + (err?.text || err?.message || JSON.stringify(err));
+      console.error('EmailJS error:', err);
+    }
+
+    btn.textContent = 'Send message';
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+  }
+
+  // ============================================================
+  // BANANA LAMP
+  // ARTICLES — single source of truth.
+  // Edit any article here and it updates everywhere on the site
+  // (home page featured cards, league pages, side stacks, modal).
+  // To add a new article: add a new key + object below, then
+  // reference that key in onclick="openArticle('your-key')"
+  // on whichever card(s) you want to link to it.
+  // ============================================================
+  // ---------------------------------------------------------------
+  // SUPABASE — Dynamic article system (replaces all hardcoded articles)
+  // ---------------------------------------------------------------
+  const SUPABASE_URL = 'https://djncmfhirfvnkkikqcwn.supabase.co';
+  const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqbmNtZmhpcmZ2bmtraWtxY3duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MjM2NTQsImV4cCI6MjA5MzM5OTY1NH0.BXtIuX5sXLVNhRyJ4SdWKZEiALcBZWv67lfGP68Wnoc';
+
+  const GRADIENTS = [
+    'linear-gradient(135deg,#0B1560,#1a2590)',
+    'linear-gradient(135deg,#1a3a6b,#0d1f40)',
+    'linear-gradient(135deg,#2e0a0a,#1a0a0a)',
+    'linear-gradient(135deg,#0a2e0a,#0a1a0a)',
+    'linear-gradient(135deg,#1a1a2e,#0a0a1a)',
+    'linear-gradient(135deg,#2e1a0a,#1a0a00)',
+    'linear-gradient(135deg,#1a0b40,#0B1560)',
+    'linear-gradient(135deg,#1a3a6b,#2a1a50)',
+    'linear-gradient(135deg,#0B2E1A,#0a1a10)',
+  ];
+  const EMOJIS = ['🏆','⚽','🌍','🐐','🔵','🦅','⭐','🎯','🔴','🏅','⚪','🟢'];
+
+  // Category → tab ID mapping (case-insensitive, partial match)
+  const CAT_MAP = [
+    [['premier league','epl'], 'pl'],
+    [['laliga','la liga','spain'], 'laliga'],
+    [['bundesliga','germany'], 'bundesliga'],
+    [['serie a','italy'], 'seriea'],
+    [['ligue 1','ligue1','france'], 'ligue1'],
+    [['champions league','ucl','cl '], 'ucl'],
+    [['world cup','wc ','wc2026'], 'wc'],
+    [['kategoria','superiore','albani','ks ','ks,'], 'ks'],
+  ];
+
+  function resolveTab(category) {
+    if (!category) return null;
+    const lower = category.toLowerCase();
+    for (const [keys, tab] of CAT_MAP) {
+      if (keys.some(k => lower.includes(k))) return tab;
+    }
+    return null;
+  }
+
+  function gradFor(idx)  { return GRADIENTS[idx % GRADIENTS.length]; }
+  function emojiFor(idx) { return EMOJIS[idx % EMOJIS.length]; }
+
+  function fmtDate(ts) {
+    if (!ts) return '';
+    try { return new Date(ts).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}); }
+    catch { return ''; }
+  }
+
+  function openDbArticle(article, idx) {
+    const modal = document.getElementById('article-modal');
+    const hero  = modal.querySelector('.modal-hero');
+    if (article.image) {
+      hero.style.background = `url('${article.image}') center/cover no-repeat`;
+      hero.textContent = '';
+    } else {
+      hero.style.background = gradFor(idx);
+      hero.textContent = emojiFor(idx);
+    }
+    modal.querySelector('.modal-tag').textContent  = article.category || 'Article';
+    modal.querySelector('.modal-title').textContent = article.title   || 'Untitled';
+    const parts = [
+      article.author ? 'By ' + article.author : '',
+      fmtDate(article.posted_at),
+      article['read length'] ? article['read length'] + ' min read' : ''
+    ].filter(Boolean);
+    modal.querySelector('.modal-meta').textContent = parts.join(' · ');
+    const raw = article.content || '<p>No content.</p>';
+    const isHtml = /<[a-z]/.test(raw);
+    modal.querySelector('.modal-body').innerHTML = isHtml
+      ? raw
+      : raw.split('\n\n').filter(p=>p.trim()).map(p => '<p>'+p.trim()+'</p>').join('');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeArticle() {
+    document.getElementById('article-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('article-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeArticle();
+  });
+
+  function makeSideArticle(article, idx, openFn) {
+    const el = document.createElement('div');
+    el.className = 'side-article';
+    const thumb = article.image
+      ? `<img src="${article.image}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" alt="">`
+      : emojiFor(idx);
+    const bg = article.image ? 'none' : gradFor(idx);
+    const readLen = article['read length'] ? article['read length'] + ' min read' : '';
+    el.innerHTML = `
+      <div class="side-article-thumb" style="background:${bg};">${thumb}</div>
+      <div>
+        <div class="side-article-title">${article.title || 'Untitled'}</div>
+        <div class="side-article-meta">${article.category || ''} ${readLen ? '· ' + readLen : ''}</div>
+      </div>`;
+    el.addEventListener('click', openFn);
+    return el;
+  }
+
+  function makeCard(article, idx, openFn) {
+    const card = document.createElement('div');
+    card.className = 'article-card';
+    card.style.cursor = 'pointer';
+    const bg = article.image ? 'none' : gradFor(idx);
+    const imgContent = article.image
+      ? `<img src="${article.image}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : emojiFor(idx);
+    const readLen = article['read length'] ? article['read length'] + ' min read' : '';
+    const date    = fmtDate(article.posted_at);
+    const meta    = [date, readLen].filter(Boolean).join(' · ');
+    card.innerHTML = `
+      <div class="article-card-img" style="background:${bg};">${imgContent}</div>
+      <div class="article-card-body">
+        <div class="article-card-tag">${article.category || 'Article'}</div>
+        <div class="article-card-title">${article.title || 'Untitled'}</div>
+        <div class="article-card-meta">${meta}</div>
+      </div>`;
+    card.addEventListener('click', openFn);
+    return card;
+  }
+
+  function makeHeroCard(article, idx, openFn) {
+    const el = document.createElement('div');
+    el.className = 'hero-main article-card';
+    el.style.cursor = 'pointer';
+    const bg = article.image
+      ? `url('${article.image}') center/cover no-repeat`
+      : gradFor(idx);
+    const emoji = article.image ? '' : `<span style="font-size:64px;">${emojiFor(idx)}</span>`;
+    const readLen = article['read length'] ? article['read length'] + ' min read' : '';
+    el.innerHTML = `
+      <div class="hero-img-skel" style="background:${bg};display:flex;align-items:center;justify-content:center;">${emoji}</div>
+      <div class="hero-body">
+        <span style="background:rgba(0,229,255,0.15);color:var(--accent);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">${article.category || 'Article'}</span>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--text);line-height:1.25;margin-top:8px;">${article.title || 'Untitled'}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;">${readLen}</div>
+      </div>`;
+    el.addEventListener('click', openFn);
+    return el;
+  }
+
+  // Static editorial articles (pre-written, not from DB)
+  const staticArticles = {
+    'pl-side-1': { tag:'Analysis · Premier League', emoji:'⚽', bg:'linear-gradient(135deg,#0a1a0a,#1a2e1a)', title:"Arsenal's pressing game is the best in Europe right now", meta:'By Staff Writer · 4 min read', body:`<p>There is a moment in every Arsenal match this season where you feel it — a collective surge, ten outfield players collapsing on the ball like a perfectly coordinated trap, and suddenly the opposition has nowhere to go. It is relentless, intelligent, and utterly suffocating. Mikel Arteta has finally built what he always envisioned: the pressing machine.</p><p>The numbers back it up. Arsenal lead the Premier League in press intensity and have the highest PPDA (passes allowed per defensive action) in Europe's top five leagues. But statistics only tell part of the story. What truly stands out is how coordinated it all is — every player knows their role, their trigger, their escape route.</p><p>The question is whether they can sustain it across a full season and into Europe. History says that high-press teams often tire. But this Arsenal side looks different. They believe it. And right now, that belief might just be enough.</p>` },
+    'pl-side-2': { tag:'Opinion · Premier League', emoji:'🔵', bg:'linear-gradient(135deg,#0a0a2e,#0a1a2e)', title:"Why City's rebuild is quietly working", meta:'By Staff Writer · 4 min read', body:`<p>Everyone wrote off Manchester City the moment Rodri got injured. The pundits had their narratives ready: Pep's invincibles had finally been found out. The machine had lost its engine. It made for great television, and terrible analysis.</p><p>What actually happened was more interesting. City adapted. They played a slower, more positional game. They leaned on their younger players — players who, it turns out, are rather good at football. The rebuild everyone assumed would take two or three seasons is happening in real time, and it's happening well.</p><p>None of this means City will win the title. But it does mean that the era isn't over. It's just changing shape. And if Pep Guardiola has proven anything, it's that he always finds a way to make the new shape look inevitable in hindsight.</p>` },
+    'll-side-1': { tag:'Preview · LaLiga', emoji:'🔴', bg:'linear-gradient(135deg,#2e1a0a,#3e2a0a)', title:"El Clásico preview: Can Barça stop the Mbappé machine?", meta:'By Staff Writer · 5 min read', body:`<p>El Clásico arrives this weekend with more on the line than usual. Real Madrid sit top of LaLiga, buoyed by an in-form Kylian Mbappé who has found, at last, the comfort and freedom he perhaps never quite felt in Paris. He is running at defenders, finishing clinically, and smiling. That last one might worry Barcelona most of all.</p><p>Barça's defensive question is not new. They press high and press well, but against pace — genuine, elite, 100m-in-nine-seconds pace — gaps appear. Mbappé lives in those gaps. The key matchup will be Mbappé versus Cubarsí: generational talent against teenage prodigy. It should be something to watch.</p><p>Still, Barcelona have weapons of their own. Pedri is playing the best football of his life, Lamine Yamal continues to defy logic, and their set piece record this season has been extraordinary. This is not a mismatch. It is, as always, a coin flip wrapped in 90 minutes of theatre. Roll on Saturday.</p>` },
+    'll-side-2': { tag:'Analysis · LaLiga', emoji:'⚪', bg:'linear-gradient(135deg,#0a0a1a,#0a1a2e)', title:"Real Madrid's midfield transition is complete", meta:'By Staff Writer · 3 min read', body:`<p>For two years, the conversation around Real Madrid's midfield centred on absence. Casemiro gone. Kroos gone. Modric ageing. Who would replace the greatest midfield trio in the history of club football? The answer, it turns out, was already at the club — they just needed time.</p><p>Tchouaméni has grown into the defensive anchor role with quiet authority. Bellingham continues to do impossible things from impossible positions. And the younger players filtering through have added energy and dynamism that the old guard, brilliant as they were, simply could not provide in their final years.</p><p>The transition is complete. It does not look like the old Madrid midfield. But it is winning games, controlling tempo, and creating chances. In the end, that is all that matters.</p>` },
+    'bl-side-1': { tag:'Opinion · Bundesliga', emoji:'🔴', bg:'linear-gradient(135deg,#2e0a0a,#1a0a0a)', title:"Bayern's 14th consecutive title: boring, but brilliant", meta:'By Staff Writer · 4 min read', body:`<p>There is a version of this article that begins with an apology. "Sorry for the predictable headline." But then again, Bayern Munich have been winning the Bundesliga so consistently that predictability itself has become the story. Thirteen in a row. Fourteen now. What do you say?</p><p>You say this: what Bayern have done is genuinely historically remarkable. No other club in Europe's top leagues comes close to this level of sustained domestic dominance. Yes, the league lacks competition. Yes, the gap between Bayern and the rest is embarrassing for German football. Both things are true.</p><p>But Bayern's excellence should not be diminished by their rivals' weakness. The recruitment, the coaching changes, the constant reinvention — all of it has been executed with ruthless professionalism. Boring? Sure. But brilliance often is.</p>` },
+    'bl-side-2': { tag:'Feature · Bundesliga', emoji:'⚫', bg:'linear-gradient(135deg,#0a0a0a,#1a1a0a)', title:"Dortmund's young squad gives us hope — again", meta:'By Staff Writer · 3 min read', body:`<p>Every few years, Borussia Dortmund do something wonderful. They find a generation of players — young, exciting, slightly chaotic — and make you fall in love with them. And then the players leave for Bayern and you go through the whole cycle of grief again. But right now, we are in the good part.</p><p>This current crop is special. The energy in their press, the directness of their attacking play, the identity Niko Kovač has managed to instil — it all feels authentic. Dortmund look like Dortmund again. Whether they can challenge Bayern is another question. They probably cannot. But watching them try will be the most entertaining subplot of the season.</p><p>For now, enjoy it. Don't think about where these players will be in three years. Just watch the football.</p>` },
+    'sa-side-1': { tag:'Match Report · Serie A', emoji:'🔵', bg:'linear-gradient(135deg,#0a0a2e,#0a1a2e)', title:"Inter vs Milan: A derby decided by fine margins", meta:'By Staff Writer · 4 min read', body:`<p>It was the kind of derby that lives long in the memory — not because of its drama in the final minutes, or a screamer from distance, but because of how tightly contested every single moment felt. Inter 2–1 Milan in the end, but the scoreline flatters neither side and flatters neither side's anxiety levels throughout.</p><p>Inter were the more composed team in the first half, moving the ball with the patience and precision that has become their trademark under Simone Inzaghi. Lautaro Martínez opened the scoring with a clever flick that left the Milan goalkeeper looking somewhat embarrassed. Milan equalised through a thunderous Tomori header from a corner — a reminder that their set pieces remain a lethal weapon.</p><p>The winner came with ten minutes left: a sweeping counterattack finished with clinical precision by the ever-reliable Thuram. Milan will feel hard done by. Inter will simply feel done.</p>` },
+    'sa-side-2': { tag:'Analysis · Serie A', emoji:'⚫', bg:'linear-gradient(135deg,#1a1a0a,#0a0a0a)', title:"Napoli's second coming: Conte's magic at work", meta:'By Staff Writer · 5 min read', body:`<p>When Antonio Conte arrived in Naples, the expectation was stabilisation. Napoli had collapsed spectacularly after their title win — a season of chaos, disarray, and managerial merry-go-rounds. Conte was brought in to restore order. Instead, he has restored everything. They are title contenders again.</p><p>Conte's methods are, as ever, uncompromising. The defensive structure is immaculate. The pressing is intense and precise. The players look fitter, sharper, and — crucially — more organised than they have in years. Romelu Lukaku has rediscovered his best form under a manager who clearly knows how to get the most from him.</p><p>Whether Napoli can maintain this level across the full season remains to be seen. But right now, Antonio Conte is doing what Antonio Conte always does. Making the other teams feel like the problem is theirs to solve.</p>` },
+    'l1-side-1': { tag:'Match Report · Ligue 1', emoji:'🟢', bg:'linear-gradient(135deg,#0a2e2a,#0a1a16)', title:"PSG 3–1 Marseille: The Classique belongs to Paris — again", meta:'By Staff Writer · 3 min read', body:`<p>Le Classique delivered everything it promised and more. Pyrotechnics in the stands, ferocious tackles in the first five minutes, a red card that everyone saw coming, and three sublime goals. Paris Saint-Germain ran out 3–1 winners against a Marseille side that fought admirably but was ultimately outclassed when it mattered.</p><p>The opening goal was breathtaking — a sweeping team move finished with casual brilliance by their South American forward. Marseille equalised through a penalty that felt slightly fortunate. Then PSG turned on the afterburners and the game was over before the hour mark.</p><p>For all Marseille's effort and organisation, the gap in quality between these clubs remains significant. That is the uncomfortable truth that no amount of passion in the Stade Vélodrome can disguise. PSG win Le Classique. Again. As is tradition.</p>` },
+    'l1-side-2': { tag:'Feature · Ligue 1', emoji:'⚪', bg:'linear-gradient(135deg,#1a2a0a,#0a1a0a)', title:"Monaco's title push is the best story in French football", meta:'By Staff Writer · 4 min read', body:`<p>Forget PSG for a moment — although that is always easier said than done. The real story of Ligue 1 this season is AS Monaco. Quietly, efficiently, and with a style of play that is an absolute joy to watch, they have mounted a title challenge that nobody predicted and everybody should be following.</p><p>Their manager has created something genuinely special on the Côte d'Azur. A young squad, built on intelligent recruitment and cohesive teamwork, playing attractive, direct football with a high defensive line and tremendous energy. They press like Arsenal, transition like Dortmund, and defend like a team twice their age.</p><p>Whether they can sustain it for the full season against the financial might of PSG is the question. But right now, watching Monaco play football is one of the purest pleasures European football has to offer. Don't sleep on them.</p>` },
+    'ucl-1': { tag:'Match Report · Champions League', emoji:'🏆', bg:'linear-gradient(135deg,#0B1560,#1a2590)', title:"Barcelona 0–9 PSG: The most shocking night in UCL history", meta:'By Staff Writer · 6 min read', body:`<p>There are football results that defy comprehension. That stop you mid-sentence, mid-sip, mid-breath, and make you say the number again out loud just to confirm you heard it correctly. Barcelona. Nil. PSG. Nine. The aggregate: nil, sixteen. Let that land.</p><p>No team has ever conceded nine goals in a Champions League knockout match. No team from the top five leagues has been so thoroughly dismantled at this stage of the competition in the tournament's modern era. And Barcelona, for all their recent resurgence under their current manager, simply had no answer for a PSG side playing some of the finest football seen in European competition in decades.</p><p>The Dembélé question will dominate the post-mortems. Four goals, three assists. Against his former club. The silence in the Camp Nou after his second goal was one of the most extraordinary things European football has produced in years. Barcelona fans are a passionate, often loud crowd. For a full thirty seconds after that goal, there was nothing. Just the visiting supporters, and the echo of something that felt historic.</p>` },
+    'ucl-2': { tag:'Analysis · Champions League', emoji:'⭐', bg:'linear-gradient(135deg,#1a0b40,#0B1560)', title:"How Dembélé became the best player on the planet", meta:'By Staff Writer · 5 min read', body:`<p>The transformation of Ousmane Dembélé is one of football's most remarkable stories. At Barcelona, he was a talent who never quite fulfilled his potential — brilliant in flashes, maddening in inconsistency, perpetually one injury away from another six weeks on the treatment table. At PSG, he is something else entirely.</p><p>The numbers first: 24 goals and 19 assists in all competitions this season. But it is not the numbers that tell the story. It is the way he plays now. The directness. The decision-making that used to evaporate in big moments, now forged into something reliable and clinical. He is the most difficult forward to defend against in European football, and it is not particularly close.</p>` },
+    'ucl-3': { tag:'Preview · Champions League', emoji:'🎯', bg:'linear-gradient(135deg,#0d2040,#0B1560)', title:"UCL Final preview: Is anyone stopping PSG?", meta:'By Staff Writer · 4 min read', body:`<p>The honest answer to the headline question is: probably not. PSG are operating at a level that feels disconnected from the rest of European football right now. Their aggregate Champions League record this season is extraordinary, and their attacking play borders on unfair.</p><p>But finals are different. Finals compress football into ninety minutes — sometimes fewer — where one defensive lapse, one set piece, one moment of individual brilliance can override all the expected goals and heat maps and xA figures that the analysts have been poring over. That is what makes football wonderful. That is also what keeps PSG's opponents alive.</p>` },
+    'wc-1': { tag:'Preview · World Cup 2026', emoji:'🌍', bg:'linear-gradient(135deg,#1a3a6b,#0d1f40)', title:"2026 World Cup: Every group, ranked by intrigue", meta:'By Staff Writer · 7 min read', body:`<p>The 2026 World Cup group stage is upon us, and with 48 teams and 12 groups, there is more football than ever — and, inevitably, more variance in quality. Some groups are fascinating, multi-way battles. Others feature one or two elite nations and three teams making up the numbers. We have ranked them all.</p><p><strong>Group A (Brazil, Germany, Japan, Morocco)</strong> — the standout group of the tournament. Any of the four could reasonably claim a top-two finish on their day. Brazil and Germany are favourites, but Morocco proved at the 2022 World Cup that they should never be underestimated, and Japan have been consistently over-performing their seeding for years.</p><p><strong>Group B (France, Argentina, Mexico, Senegal)</strong> — France and Argentina are the clear favourites, but a fully fit Senegal with their current generation of talent is a dangerous third team. Mexico, as always, will make their group stage exit feel somehow unexpected.</p>` },
+    'wc-2': { tag:'Feature · World Cup 2026', emoji:'🇧🇷', bg:'linear-gradient(135deg,#0d2a50,#1a3a6b)', title:"Brazil vs Germany again: 12 years on, can the Seleção exorcise the ghost?", meta:'By Staff Writer · 5 min read', body:`<p>Mineirazo. The word does not need translating for anyone who watched the 2014 World Cup. Brazil, at home, in their own World Cup semifinal, defeated 7–1 by Germany in a match so one-sided it felt like a fever dream. Twelve years later, in the group stage of the 2026 World Cup, the two nations meet again.</p><p>The Brazil squad has changed significantly. There is no Neymar, no Thiago Silva, no Hulk. This is a younger, quicker, more technically refined Seleção, coached with genuine tactical intelligence for the first time in years. They believe in themselves again. That is not nothing.</p><p>Germany, meanwhile, have rebuilt well. They are compact, quick in transition, and carry a real threat from multiple positions. This group stage match will not define either nation's World Cup, but it will define something. And Brazil will not want to lose this one again. Not in front of the world. Not like last time.</p>` },
+    'wc-3': { tag:'Opinion · World Cup 2026', emoji:'🐐', bg:'linear-gradient(135deg,#1a3a6b,#2a1a50)', title:"This is Mbappé's World Cup to lose", meta:'By Staff Writer · 4 min read', body:`<p>Kylian Mbappé is 27 years old, at the absolute peak of his powers, playing the best football of his career, and about to compete in a World Cup on American soil in front of the largest audiences the tournament has ever attracted. If you are making a list of "conditions most likely to produce a legendary World Cup performance," this is the list.</p><p>France have a strong squad, a manager who knows how to win major tournaments, and a forward line that on paper should be generating approximately one hundred goals across the group stage. The question — always the question with Mbappé at international tournaments — is whether he can do it consistently across seven matches, not just in flashes.</p>` },
+    'ks-side-1': { tag:'Match Report · Kategoria Superiore', emoji:'🦅', bg:'linear-gradient(135deg,#2e0a0a,#1a0a0a)', title:"Vllaznia 5–0 Tirana: The red-and-blues are unstoppable", meta:'By Staff Writer · 3 min read', body:`<p>Five goals. No reply. The scoreline tells the story cleanly, but it cannot quite capture the performance — the relentless, ruthless, joyful football that SK Vllaznia produced in Shkodër on Saturday evening. This was not a win. This was a statement.</p><p>From the opening whistle, Vllaznia pressed high, won the ball in dangerous areas, and attacked with a directness that Tirana simply could not cope with. By halftime it was already four goals to nil, and the sold-out stadium was in full voice. The atmosphere, as it always is in Shkodër for a derby of this magnitude, was something to behold.</p><p>Three games remain in the season. Vllaznia lead the table by seven points. The Kategoria Superiore title is theirs to lose. And on this form, they are not going to lose it. Viva La Vllaznia.</p>` },
+    'ks-side-2': { tag:'Opinion · Kategoria Superiore', emoji:'🇦🇱', bg:'linear-gradient(135deg,#0a1a0a,#0a0a0a)', title:"Why the Kategoria Superiore is the world's most underrated league", meta:'By Staff Writer · 5 min read', body:`<p>Allow us to make the case. The Kategoria Superiore — Albania's top professional football division — is, by certain metrics, the most entertaining league in European football. We say "certain metrics" because the metrics we care about are: goals, red cards, intensity of rivalry, and the ratio of drama-per-minute. By these measures, it is unmatched.</p><p>Ten teams. Each pair meets four times per season. The rivalries are therefore constant, personal, and fierce in a way that leagues with twenty teams simply cannot replicate. When Vllaznia play Skënderbeu, it is the fourth time those squads have faced each other this season. Familiarity breeds contempt. Contempt breeds commitment. Commitment breeds the kind of football that reminds you why you fell in love with the game.</p><p>We are not saying the Kategoria Superiore is technically superior to the Premier League or LaLiga. We are saying it is more fun to watch per minute, per matchday, per season. There is a difference. Come for the red cards. Stay for the atmosphere. Return for Vllaznia.</p>` },
+  };
+
+  function openStaticArticle(id) {
+    const a = staticArticles[id];
+    if (!a) return;
+    const modal = document.getElementById('article-modal');
+    const hero = modal.querySelector('.modal-hero');
+    hero.style.background = a.bg;
+    hero.textContent = a.emoji;
+    modal.querySelector('.modal-tag').textContent  = a.tag;
+    modal.querySelector('.modal-title').textContent = a.title;
+    modal.querySelector('.modal-meta').textContent  = a.meta;
+    modal.querySelector('.modal-body').innerHTML    = a.body;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Wraps a promise with a timeout — resolves to fallback value if too slow
+  function withTimeout(promise, ms, fallback) {
+    return Promise.race([
+      promise,
+      new Promise(resolve => setTimeout(() => resolve(fallback), ms))
+    ]);
+  }
+
+  async function loadAllArticles() {
+    try {
+      const res = await withTimeout(
+        fetch(`${SUPABASE_URL}/rest/v1/Articles?select=*&order=posted_at.desc`,
+          { headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON } }),
+        8000, null
+      );
+      if (!res || !res.ok) throw new Error('HTTP ' + (res?.status ?? 'timeout'));
+      const rows = await res.json();
+
+      // Clear placeholder text from all tab article containers
+      const tabContainers = {
+        pl:         document.getElementById('pl-articles'),
+        laliga:     document.getElementById('laliga-articles'),
+        bundesliga: document.getElementById('bundesliga-articles'),
+        seriea:     document.getElementById('seriea-articles'),
+        ligue1:     document.getElementById('ligue1-articles'),
+        ucl:        document.getElementById('ucl-grid'),
+        wc:         document.getElementById('wc-grid'),
+        ks:         document.getElementById('ks-articles'),
+      };
+      Object.values(tabContainers).forEach(el => { if (el) el.innerHTML = ''; });
+
+      if (!rows.length) {
+        document.getElementById('home-empty').style.display = 'block';
+        return;
+      }
+
+      // ── HOME PAGE ──────────────────────────────────────────────────────────
+      const heroWrap = document.getElementById('home-hero-wrap');
+      const homeGrid = document.getElementById('home-grid');
+
+      const [heroArticle, ...rest] = rows;
+
+      // Hero card (first/latest article)
+      const heroCard = makeHeroCard(heroArticle, 0, () => openDbArticle(heroArticle, 0));
+      heroWrap.appendChild(heroCard);
+
+      // Sidebar: next 3 articles
+      if (rest.length > 0) {
+        const sideStack = document.createElement('div');
+        sideStack.className = 'side-stack';
+        rest.slice(0, 3).forEach((a, i) => {
+          sideStack.appendChild(makeSideArticle(a, i + 1, () => openDbArticle(a, i + 1)));
+        });
+        heroWrap.appendChild(sideStack);
+      }
+
+      document.getElementById('home-hero-section').style.display = 'block';
+
+      // Latest stories grid: articles 4+ (or all if only a few)
+      const gridArticles = rows.length > 1 ? rest : rows;
+      gridArticles.forEach((a, i) => {
+        homeGrid.appendChild(makeCard(a, i + 1, () => openDbArticle(a, i + 1)));
+      });
+      document.getElementById('home-latest-section').style.display = 'block';
+
+      // ── TAB PAGES ─────────────────────────────────────────────────────────
+      rows.forEach((a, i) => {
+        const tabId = resolveTab(a.category);
+        if (!tabId) return;
+        const container = tabContainers[tabId];
+        if (!container) return;
+
+        const openFn = () => openDbArticle(a, i);
+        // ucl and wc use grid3 (card style); others use side-stack style
+        const useCard = ['ucl', 'wc'].includes(tabId);
+        container.appendChild(useCard ? makeCard(a, i, openFn) : makeSideArticle(a, i, openFn));
+      });
+
+      // Show "No articles" message in empty tab containers
+      Object.entries(tabContainers).forEach(([id, el]) => {
+        if (el && el.children.length === 0) {
+          el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:10px 0;">No articles yet.</div>';
+        }
+      });
+
+    } catch (err) {
+      console.error('[NoVARNeeded] Supabase load error:', err);
+      // Fall back to static articles so the page is never blank
+      renderStaticArticleFallback();
+    }
+  }
+
+  function renderStaticArticleFallback() {
+    // Build a flat list from staticArticles for home page display
+    const entries = Object.entries(staticArticles);
+    if (!entries.length) {
+      const emptyEl = document.getElementById('home-empty');
+      if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Articles unavailable right now — check back soon.'; }
+      return;
+    }
+
+    const heroWrap = document.getElementById('home-hero-wrap');
+    const homeGrid = document.getElementById('home-grid');
+    if (!heroWrap || !homeGrid) return;
+
+    entries.forEach(([id, a], i) => {
+      const openFn = () => openStaticArticle(id);
+      const fakeArticle = { title: a.title, category: a.tag.split(' · ')[1] || a.tag, image: null };
+      if (i === 0) {
+        // Hero
+        const el = document.createElement('div');
+        el.className = 'hero-main article-card';
+        el.style.cursor = 'pointer';
+        el.innerHTML = `
+          <div class="hero-img-skel" style="background:${a.bg};display:flex;align-items:center;justify-content:center;"><span style="font-size:64px;">${a.emoji}</span></div>
+          <div class="hero-body">
+            <span style="background:rgba(0,229,255,0.15);color:var(--accent);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">${fakeArticle.category}</span>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--text);line-height:1.25;margin-top:8px;">${a.title}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px;">${a.meta}</div>
+          </div>`;
+        el.addEventListener('click', openFn);
+        heroWrap.appendChild(el);
+
+        // Sidebar: next 3
+        const sideStack = document.createElement('div');
+        sideStack.className = 'side-stack';
+        entries.slice(1, 4).forEach(([sid, sa], si) => {
+          const sfn = () => openStaticArticle(sid);
+          const sel = document.createElement('div');
+          sel.className = 'side-article';
+          sel.innerHTML = `
+            <div class="side-article-thumb" style="background:${sa.bg};display:flex;align-items:center;justify-content:center;font-size:24px;">${sa.emoji}</div>
+            <div><div class="side-article-title">${sa.title}</div><div class="side-article-meta">${sa.meta}</div></div>`;
+          sel.addEventListener('click', sfn);
+          sideStack.appendChild(sel);
+        });
+        heroWrap.appendChild(sideStack);
+        document.getElementById('home-hero-section').style.display = 'block';
+      } else if (i >= 4) {
+        // Grid cards
+        const card = document.createElement('div');
+        card.className = 'article-card';
+        card.style.cursor = 'pointer';
+        card.innerHTML = `
+          <div class="article-card-img" style="background:${a.bg};">${a.emoji}</div>
+          <div class="article-card-body">
+            <div class="article-card-tag">${fakeArticle.category}</div>
+            <div class="article-card-title">${a.title}</div>
+            <div class="article-card-meta">${a.meta}</div>
+          </div>`;
+        card.addEventListener('click', openFn);
+        homeGrid.appendChild(card);
+      }
+    });
+    document.getElementById('home-latest-section').style.display = 'block';
+  }
+
+  // ---------------------------------------------------------------
+  // LIVE SCORES — ESPN public API
+  // One fetcher per league, renders into per-page score rows
+  // Polls every 60s; also triggered on tab switch
+  // ---------------------------------------------------------------
+
+  const scoreCache = {}; // slug → events array
+
+  async function fetchLeagueScores(slug, opts = {}) {
+    const pad = n => String(n).padStart(2,'0');
+    const fmt = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const today = new Date();
+    const pastDays   = opts.pastDays   ?? 2;
+    const futureDays = opts.futureDays ?? 14;
+    const past   = new Date(today); past.setDate(today.getDate() - pastDays);
+    const future = new Date(today); future.setDate(today.getDate() + futureDays);
+
+    const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard?dates=${fmt(past)}-${fmt(future)}&limit=80`;
+    try {
+      const res = await withTimeout(fetch(url), 8000, null);
+      if (!res || !res.ok) throw new Error(res?.status ?? 'timeout');
+      const json = await res.json();
+      return json?.events ?? [];
+    } catch {
+      try {
+        const res2 = await withTimeout(
+          fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard`),
+          8000, null
+        );
+        if (!res2 || !res2.ok) return [];
+        const json2 = await res2.json();
+        return json2?.events ?? [];
+      } catch { return []; }
+    }
+  }
+
+  function formatMatchDate(dateStr) {
+    const dt = new Date(dateStr);
+    const today = new Date();
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+    const tomorrow  = new Date(today); tomorrow.setDate(today.getDate() + 1);
+
+    const sameDay = (a, b) => a.toDateString() === b.toDateString();
+    let dayLabel;
+    if (sameDay(dt, today))          dayLabel = 'Today';
+    else if (sameDay(dt, yesterday)) dayLabel = 'Yesterday';
+    else if (sameDay(dt, tomorrow))  dayLabel = 'Tomorrow';
+    else dayLabel = dt.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+    const time = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return { dayLabel, time };
+  }
+
+  function makeScorePill(event) {
+    const comp  = event.competitions?.[0];
+    const home  = comp?.competitors?.find(c => c.homeAway === 'home');
+    const away  = comp?.competitors?.find(c => c.homeAway === 'away');
+    if (!home || !away) return null;
+
+    const state     = event.status?.type?.state;
+    const clock     = event.status?.displayClock ?? '';
+    const period    = event.status?.period ?? 0;
+    const homeScore = home.score ?? '–';
+    const awayScore = away.score ?? '–';
+    const homeName  = home.team?.shortDisplayName ?? home.team?.displayName ?? '?';
+    const awayName  = away.team?.shortDisplayName ?? away.team?.displayName ?? '?';
+    const { dayLabel, time } = formatMatchDate(event.date);
+
+    let badge;
+    if (state === 'in') {
+      const clockLabel = period > 2 ? `ET ${clock}` : clock;
+      badge = `<span class="live-badge">Live ${clockLabel}</span>`;
+    } else if (state === 'post') {
+      badge = `<span class="fin-badge">FT · ${dayLabel}</span>`;
+    } else {
+      badge = `<span class="fin-badge">${dayLabel} ${time}</span>`;
+    }
+
+    const scoreHtml = state === 'pre'
+      ? `<span>–</span><span>–</span>`
+      : `<span>${homeScore}</span><span>${awayScore}</span>`;
+
+    const pill = document.createElement('div');
+    pill.className = 'score-pill';
+    pill.innerHTML = `${badge}<div class="teams"><span>${homeName}</span><span>${awayName}</span></div><div class="scores">${scoreHtml}</div>`;
+    return pill;
+  }
+
+  // Big clubs shown on the home tab
+  const BIG_CLUBS = new Set([
+    'Arsenal','Chelsea','Liverpool','Man City','Manchester City','Man United','Manchester United','Tottenham','Spurs','Newcastle',
+    'Real Madrid','Barcelona','Atletico','Atlético','Atletico Madrid','Atlético Madrid','Sevilla','Villarreal','Athletic Club',
+    'Bayern Munich','Bayern','Borussia Dortmund','Dortmund','Leverkusen','Bayer Leverkusen','RB Leipzig','Leipzig',
+    'Inter','Inter Milan','AC Milan','Milan','Juventus','Napoli','Roma','Lazio','Atalanta','Fiorentina',
+    'PSG','Paris Saint-Germain','Marseille','Monaco','Lyon',
+    'Porto','Benfica','Ajax','Sporting CP','Celtic','Rangers',
+    'Brazil','France','Argentina','England','Germany','Spain','Portugal','Netherlands','Italy','Uruguay','Belgium','USA',
+  ]);
+
+  function isBigClub(name) {
+    if (!name) return false;
+    for (const club of BIG_CLUBS) {
+      if (name.toLowerCase().includes(club.toLowerCase()) || club.toLowerCase().includes(name.toLowerCase())) return true;
+    }
+    return false;
+  }
+
+  function pickBest(events, filterFn, limit, pastDays = 6) {
+    const now = Date.now();
+    const pastMs = pastDays * 86400000;
+    const live     = events.filter(e => e.status?.type?.state === 'in');
+    const upcoming = events.filter(e => e.status?.type?.state === 'pre' && new Date(e.date) >= now)
+                           .sort((a,b) => new Date(a.date) - new Date(b.date));
+    const recent   = events.filter(e => e.status?.type?.state === 'post' && (now - new Date(e.date)) < pastMs)
+                           .sort((a,b) => new Date(b.date) - new Date(a.date));
+    const combined = [...live, ...upcoming, ...recent];
+    const filtered = filterFn ? combined.filter(filterFn) : combined;
+    return filtered.slice(0, limit);
+  }
+
+  function renderScoreRow(rowId, events, filterFn, limit = 6) {
+    const row = document.getElementById(rowId);
+    if (!row) return;
+
+    const toShow = pickBest(events, filterFn, limit);
+
+    if (!toShow.length) {
+      row.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;">No upcoming matches found.</div>';
+      return;
+    }
+
+    row.innerHTML = '';
+    toShow.forEach(ev => {
+      const pill = makeScorePill(ev);
+      if (pill) row.appendChild(pill);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // KS STANDINGS — tries ESPN alb.1, falls back to deriving from scoreboard
+  // Zones: 1=UCL qual (green), 2-3=UECL qual (blue), 9-10=relegated (red)
+  // ---------------------------------------------------------------
+
+  // zone colors
+  const ZONE_COLORS = {
+    ucl:      '#3b82f6',  // blue  — direct Champions League
+    uclq:     '#06b6d4',  // cyan  — UCL qualifying playoffs
+    uel:      '#e8730a',  // orange — Europa League
+    uecl:     '#1a6b3a',  // green — Conference League
+    playoff:  '#a855f7',  // purple — relegation playoff
+    rel:      '#dc2626',  // red   — relegation
+  };
+
+  function getZone(rank, zones) {
+    for (const [label, color, ranks] of zones) {
+      if (ranks.includes(rank)) return { label, color };
+    }
+    return null;
+  }
+
+  const KS_ZONES = [
+    ['UCL Qualifying',   ZONE_COLORS.ucl,  [1]],
+    ['Conference Lge',  ZONE_COLORS.uecl, [2,3]],
+    ['Relegation',      ZONE_COLORS.rel,  [9,10]],
+  ];
+
+  async function loadKsStandings() {
+    const container = document.getElementById('ks-standings-container');
+    if (!container) return;
+
+    const stat = (entry, name) => {
+      const s = entry.stats?.find(s => s.name === name);
+      return s != null ? (s.displayValue ?? String(s.value)) : '–';
+    };
+
+    // Try ESPN endpoints in order
+    const endpoints = [
+      'https://site.api.espn.com/apis/v2/sports/soccer/alb.1/standings',
+      'https://sports.core.api.espn.com/v2/sports/soccer/leagues/alb.1/seasons/2026/types/2/groups/1/standings/0',
+      'https://site.api.espn.com/apis/site/v2/sports/soccer/alb.1/standings',
+    ];
+
+    let entries = null;
+    for (const url of endpoints) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const json = await res.json();
+        entries = findEntries(json);
+        if (entries?.length) break;
+      } catch { continue; }
+    }
+
+    // Fallback: derive standings from already-fetched scoreboard events
+    if (!entries?.length) {
+      const events = scoreCache['alb.1'] ?? [];
+      if (events.length) {
+        const teams = {};
+        events.forEach(ev => {
+          const comp = ev.competitions?.[0];
+          if (!comp) return;
+          const isPost = ev.status?.type?.state === 'post';
+          comp.competitors?.forEach(c => {
+            const name = c.team?.shortDisplayName ?? c.team?.displayName ?? '?';
+            if (!teams[name]) teams[name] = { name, gp:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 };
+            const t = teams[name];
+            if (!isPost) return;
+            const gs = parseInt(c.score, 10) || 0;
+            const opp = comp.competitors.find(x => x.team?.displayName !== c.team?.displayName);
+            const ga = parseInt(opp?.score, 10) || 0;
+            t.gp++; t.gf += gs; t.ga += ga;
+            if (gs > ga)      { t.w++; t.pts += 3; }
+            else if (gs === ga){ t.d++; t.pts += 1; }
+            else               { t.l++; }
+          });
+        });
+        const sorted = Object.values(teams).sort((a,b) => b.pts-a.pts || (b.gf-b.ga)-(a.gf-a.ga) || b.gf-a.gf);
+        if (sorted.length) {
+          let html = `<div class="standings-row-live" style="border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:4px;">
+            <span class="pos"></span><span style="width:4px;display:inline-block;"></span>
+            <span class="live-team-name" style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;">Club</span>
+            <span class="live-stat" style="color:var(--muted);font-size:10px;">P</span>
+            <span class="live-stat" style="color:var(--muted);font-size:10px;">W</span>
+            <span class="live-stat" style="color:var(--muted);font-size:10px;">D</span>
+            <span class="live-stat" style="color:var(--muted);font-size:10px;">L</span>
+            <span class="live-stat" style="color:var(--muted);font-size:10px;">GD</span>
+            <span class="pts" style="color:var(--muted);font-size:10px;">Pts</span>
+          </div>`;
+          sorted.forEach((t, i) => {
+            const rank = i + 1;
+            const gd = t.gf - t.ga;
+            const gdStr = gd > 0 ? `+${gd}` : String(gd);
+            const gdCol = gd > 0 ? 'var(--accent)' : gd < 0 ? 'var(--accent2)' : 'var(--muted)';
+            const zone = getZone(rank, KS_ZONES);
+            const zoneColor = zone?.color ?? 'transparent';
+            const rowBg = zone ? `background:${zoneColor}18;` : '';
+            html += `<div class="standings-row-live" style="${rowBg}" title="${zone?.label??''}">
+              <span class="pos" style="color:${zone ? zoneColor : 'var(--muted)'};font-weight:700">${rank}</span>
+              <span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:${zoneColor};margin-right:5px;flex-shrink:0;"></span>
+              <span class="live-team-name">${t.name}</span>
+              <span class="live-stat">${t.gp}</span><span class="live-stat">${t.w}</span>
+              <span class="live-stat">${t.d}</span><span class="live-stat">${t.l}</span>
+              <span class="live-stat" style="color:${gdCol}">${gdStr}</span>
+              <span class="pts" style="color:var(--text)">${t.pts}</span>
+            </div>`;
+          });
+          const legendItems = KS_ZONES.map(([label,color]) =>
+            `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:9px;color:var(--muted);"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color};"></span>${label}</span>`
+          ).join('');
+          html += `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:2px;">${legendItems}</div>`;
+          html += `<div style="font-size:9px;color:var(--muted);margin-top:6px;">* Derived from available fixtures</div>`;
+          container.innerHTML = html;
+          return;
+        }
+      }
+      container.innerHTML = '<div style="font-size:12px;color:var(--muted);">Standings unavailable.</div>';
+      return;
+    }
+
+    // Render using ESPN data
+    const sorted = entries.slice().sort((a,b) => {
+      const ra = parseInt((a.stats?.find(s=>s.name==='rank')||{}).value,10)||99;
+      const rb = parseInt((b.stats?.find(s=>s.name==='rank')||{}).value,10)||99;
+      return ra - rb;
+    });
+
+    let html = `<div class="standings-row-live" style="border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:4px;">
+      <span class="pos"></span><span style="width:4px;display:inline-block;"></span>
+      <span class="live-team-name" style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;">Club</span>
+      <span class="live-stat" style="color:var(--muted);font-size:10px;">P</span>
+      <span class="live-stat" style="color:var(--muted);font-size:10px;">W</span>
+      <span class="live-stat" style="color:var(--muted);font-size:10px;">D</span>
+      <span class="live-stat" style="color:var(--muted);font-size:10px;">L</span>
+      <span class="live-stat" style="color:var(--muted);font-size:10px;">GD</span>
+      <span class="pts" style="color:var(--muted);font-size:10px;">Pts</span>
+    </div>`;
+
+    sorted.forEach((entry, idx) => {
+      const rank = parseInt(stat(entry,'rank'),10)||(idx+1);
+      const name = entry.team?.shortDisplayName ?? entry.team?.displayName ?? '–';
+      const pts  = stat(entry,'points');
+      const gp   = stat(entry,'gamesPlayed');
+      const wins = stat(entry,'wins');
+      const draw = stat(entry,'ties');
+      const loss = stat(entry,'losses');
+      const gd   = stat(entry,'pointDifferential')!=='–' ? stat(entry,'pointDifferential') : stat(entry,'goalDifference');
+      const gdNum = parseInt(gd,10);
+      const gdStr = isNaN(gdNum)||gdNum===0 ? gd : gdNum>0 ? `+${gd}` : gd;
+      const gdCol = isNaN(gdNum)||gdNum===0 ? 'var(--muted)' : gdNum>0 ? 'var(--accent)' : 'var(--accent2)';
+      const zone = getZone(rank, KS_ZONES);
+      const zoneColor = zone?.color ?? 'transparent';
+      const rowBg = zone ? `background:${zoneColor}18;` : '';
+      html += `<div class="standings-row-live" style="${rowBg}" title="${zone?.label??''}">
+        <span class="pos" style="color:${zone ? zoneColor : 'var(--muted)'};font-weight:700">${rank}</span>
+        <span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:${zoneColor};margin-right:5px;flex-shrink:0;"></span>
+        <span class="live-team-name">${name}</span>
+        <span class="live-stat">${gp}</span><span class="live-stat">${wins}</span>
+        <span class="live-stat">${draw}</span><span class="live-stat">${loss}</span>
+        <span class="live-stat" style="color:${gdCol}">${gdStr}</span>
+        <span class="pts" style="color:var(--text)">${pts}</span>
+      </div>`;
+    });
+
+    const legendItems = KS_ZONES.map(([label,color]) =>
+      `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:9px;color:var(--muted);"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color};"></span>${label}</span>`
+    ).join('');
+    html += `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:2px;">${legendItems}</div>`;
+    container.innerHTML = html;
+  }
+
+  async function loadAllScores() {
+    // Clear all "Loading scores…" placeholders immediately so the page feels responsive
+    ['home-scores-row','pl-scores-row','laliga-scores-row','bundesliga-scores-row',
+     'seriea-scores-row','ligue1-scores-row','ucl-scores-row','wc-scores-row','ks-scores-row']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.querySelector && el.querySelector('[style*="Loading"]')) {
+          el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;">Fetching scores…</div>';
+        }
+      });
+
+    const regularSlugs = ['eng.1','esp.1','ger.1','ita.1','fra.1','fifa.world','alb.1'];
+    // Use allSettled so a single failed/hung fetch doesn't block the rest
+    const [uclResult, ...regularResults] = await Promise.allSettled([
+      fetchLeagueScores('uefa.champions', { pastDays: 6, futureDays: 60 }),
+      ...regularSlugs.map(slug => fetchLeagueScores(slug).catch(() => [])),
+    ]);
+    const uclEvents = uclResult.status === 'fulfilled' ? uclResult.value : [];
+    scoreCache['uefa.champions'] = uclEvents;
+    regularSlugs.forEach((slug, i) => {
+      scoreCache[slug] = regularResults[i]?.status === 'fulfilled' ? (regularResults[i].value ?? []) : [];
+    });
+
+    // Home: UCL games first, then other big-club games, cap at 6
+    const bigClubFilter = ev => {
+      const comp = ev.competitions?.[0];
+      const h = comp?.competitors?.find(c => c.homeAway === 'home')?.team?.displayName ?? '';
+      const a = comp?.competitors?.find(c => c.homeAway === 'away')?.team?.displayName ?? '';
+      return isBigClub(h) || isBigClub(a);
+    };
+    const uclBest    = pickBest(uclEvents, bigClubFilter, 6);
+    const otherBest  = pickBest(regularSlugs.flatMap(s => scoreCache[s] ?? []), bigClubFilter, 6);
+    // Dedupe by event id, UCL first
+    const seen = new Set();
+    const homeList = [...uclBest, ...otherBest].filter(e => {
+      if (seen.has(e.id)) return false;
+      seen.add(e.id); return true;
+    }).slice(0, 6);
+    const homeRow = document.getElementById('home-scores-row');
+    if (homeRow) {
+      if (homeList.length === 0) {
+        homeRow.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;">No live or recent matches found.</div>';
+      } else {
+        homeRow.innerHTML = '';
+        homeList.forEach(ev => { const p = makeScorePill(ev); if (p) homeRow.appendChild(p); });
+      }
+    }
+
+    // Per-league rows
+    renderScoreRow('pl-scores-row',         scoreCache['eng.1'],           null, 6);
+    renderScoreRow('laliga-scores-row',      scoreCache['esp.1'],           null, 6);
+    renderScoreRow('bundesliga-scores-row',  scoreCache['ger.1'],           null, 6);
+    renderScoreRow('seriea-scores-row',      scoreCache['ita.1'],           null, 6);
+    renderScoreRow('ligue1-scores-row',      scoreCache['fra.1'],           null, 6);
+    renderScoreRow('ucl-scores-row',         scoreCache['uefa.champions'],  null, 8); // ensure at least 5 visible
+    renderScoreRow('wc-scores-row',          scoreCache['fifa.world'],      null, 6);
+    renderScoreRow('ks-scores-row',          scoreCache['alb.1'],           null, 6);
+
+    loadKsStandings();
+
+    const updatedEl = document.getElementById('scores-updated');
+    if (updatedEl) {
+      const now = new Date();
+      updatedEl.textContent = `· updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+  }
+
+  // Initial load + poll every 60s
+  loadAllScores();
+  setInterval(loadAllScores, 60000);
+
+  loadAllArticles();
+
+
+
+
+
+
+  // ---------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // LIVE STANDINGS — ESPN public API (no key required)
+  // Covers: Premier League, LaLiga, Bundesliga, Serie A, Ligue 1
+  // ---------------------------------------------------------------
+
+  // ESPN league slugs + qualification zones per league
+  const LEAGUE_CONFIGS = {
+    pl: {
+      slug: 'eng.1',
+      // PL 2025-26: 1-5 UCL (EPS), 6 UEL, 7 UECL playoff round, 18-20 relegated
+      zones: [
+        ['Champions League', ZONE_COLORS.ucl,     [1,2,3,4,5]],
+        ['Europa League',    ZONE_COLORS.uel,     [6]],
+        ['Conference Lge',   ZONE_COLORS.uecl,   [7]],
+        ['Relegation',       ZONE_COLORS.rel,    [18,19,20]],
+      ],
+    },
+    laliga: {
+      slug: 'esp.1',
+      // LaLiga 2025-26: 1-4 UCL, 5 UEL, 6 UECL qualifying, 18-20 relegated
+      zones: [
+        ['Champions League', ZONE_COLORS.ucl,   [1,2,3,4]],
+        ['Europa League',    ZONE_COLORS.uel,   [5]],
+        ['Conference Lge',  ZONE_COLORS.uecl,  [6]],
+        ['Relegation',       ZONE_COLORS.rel,  [18,19,20]],
+      ],
+    },
+    bundesliga: {
+      slug: 'ger.1',
+      // Bundesliga 2025-26: 1-4 UCL, 5 UEL, 6 UECL, 16 rel. playoff, 17-18 relegated
+      zones: [
+        ['Champions League', ZONE_COLORS.ucl,     [1,2,3,4]],
+        ['Europa League',    ZONE_COLORS.uel,     [5]],
+        ['Conference Lge',  ZONE_COLORS.uecl,    [6]],
+        ['Rel. Playoff',     ZONE_COLORS.playoff, [16]],
+        ['Relegation',       ZONE_COLORS.rel,    [17,18]],
+      ],
+    },
+    seriea: {
+      slug: 'ita.1',
+      // Serie A 2025-26: 1-4 UCL, 5 UEL, 6 UECL qualifying, 18-20 relegated
+      zones: [
+        ['Champions League', ZONE_COLORS.ucl,   [1,2,3,4]],
+        ['Europa League',    ZONE_COLORS.uel,   [5]],
+        ['Conference Lge',  ZONE_COLORS.uecl,  [6]],
+        ['Relegation',       ZONE_COLORS.rel,  [18,19,20]],
+      ],
+    },
+    ligue1: {
+      slug: 'fra.1',
+      // Ligue 1 2025-26 (18 teams): 1-3 UCL, 4 UCL qualifying, 5 UEL, 6 UECL, 16 rel. playoff, 17-18 relegated
+      zones: [
+        ['Champions League', ZONE_COLORS.ucl,     [1,2,3]],
+        ['UCL Qualifying',   ZONE_COLORS.uclq,    [4]],
+        ['Europa League',    ZONE_COLORS.uel,     [5]],
+        ['Conference Lge',   ZONE_COLORS.uecl,   [6]],
+        ['Rel. Playoff',     ZONE_COLORS.playoff, [16]],
+        ['Relegation',       ZONE_COLORS.rel,    [17,18]],
+      ],
+    },
+  };
+
+  function renderStandingsTable(entries, containerId, updatedId, leagueId) {
+    const container = document.getElementById(containerId);
+    const updatedEl = document.getElementById(updatedId);
+    if (!container) return;
+
+    const zones = LEAGUE_CONFIGS[leagueId]?.zones ?? [];
+
+    const stat = (entry, name) => {
+      const s = entry.stats?.find(s => s.name === name);
+      return s != null ? (s.displayValue ?? String(s.value)) : '–';
+    };
+
+    const gdColor = (val) => {
+      const n = parseInt(val, 10);
+      if (isNaN(n) || n === 0) return 'var(--muted)';
+      return n > 0 ? 'var(--accent)' : 'var(--accent2)';
+    };
+
+    let html = `
+      <div class="standings-row-live" style="border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:4px;">
+        <span class="pos"></span>
+        <span style="width:4px;display:inline-block;"></span>
+        <span class="live-team-name" style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;">Club</span>
+        <span class="live-stat" style="color:var(--muted);font-size:10px;">P</span>
+        <span class="live-stat" style="color:var(--muted);font-size:10px;">W</span>
+        <span class="live-stat" style="color:var(--muted);font-size:10px;">D</span>
+        <span class="live-stat" style="color:var(--muted);font-size:10px;">L</span>
+        <span class="live-stat" style="color:var(--muted);font-size:10px;">GD</span>
+        <span class="pts" style="color:var(--muted);font-size:10px;">Pts</span>
+      </div>`;
+
+    entries.forEach((entry, idx) => {
+      const rank = parseInt(stat(entry, 'rank'), 10) || (idx + 1);
+      const pts  = stat(entry, 'points');
+      const gp   = stat(entry, 'gamesPlayed');
+      const wins = stat(entry, 'wins');
+      const draw = stat(entry, 'ties');
+      const loss = stat(entry, 'losses');
+      const gd   = stat(entry, 'pointDifferential') !== '–'
+                 ? stat(entry, 'pointDifferential')
+                 : stat(entry, 'goalDifference');
+      const gdDisplay = gd !== '–' && parseInt(gd, 10) > 0 ? `+${gd}` : gd;
+      const name = entry.team?.shortDisplayName ?? entry.team?.displayName ?? '–';
+
+      const zone = getZone(rank, zones);
+      const zoneColor = zone?.color ?? 'transparent';
+      const rowBg = zone ? `background:${zoneColor}18;` : '';
+
+      html += `
+        <div class="standings-row-live" style="${rowBg}" title="${zone?.label ?? ''}">
+          <span class="pos" style="color:${zone ? zoneColor : 'var(--muted)'};font-weight:700">${rank}</span>
+          <span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:${zoneColor};margin-right:5px;flex-shrink:0;"></span>
+          <span class="live-team-name">${name}</span>
+          <span class="live-stat">${gp}</span>
+          <span class="live-stat">${wins}</span>
+          <span class="live-stat">${draw}</span>
+          <span class="live-stat">${loss}</span>
+          <span class="live-stat" style="color:${gdColor(gd)}">${gdDisplay}</span>
+          <span class="pts" style="color:var(--text)">${pts}</span>
+        </div>`;
+    });
+
+    // Legend
+    const seenLabels = new Set();
+    const legendItems = zones
+      .filter(([label]) => { if (seenLabels.has(label)) return false; seenLabels.add(label); return true; })
+      .map(([label, color]) => `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:9px;color:var(--muted);"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color};"></span>${label}</span>`)
+      .join('');
+    html += `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:2px;">${legendItems}</div>`;
+
+    container.innerHTML = html;
+    if (updatedEl) updatedEl.textContent = '· live';
+  }
+
+  function findEntries(json) {
+    // Try known ESPN nesting paths first
+    const candidates = [
+      json?.standings?.entries,
+      json?.children?.[0]?.standings?.entries,
+      json?.children?.[0]?.children?.[0]?.standings?.entries,
+    ];
+    for (const c of candidates) {
+      if (Array.isArray(c) && c.length && c[0].team) return c;
+    }
+    // Recursive fallback
+    const search = (obj) => {
+      if (!obj || typeof obj !== 'object') return null;
+      if (Array.isArray(obj.entries) && obj.entries.length && obj.entries[0].team) return obj.entries;
+      for (const val of Object.values(obj)) {
+        const found = search(val);
+        if (found) return found;
+      }
+      return null;
+    };
+    return search(json);
+  }
+
+  const loadedLeagues = new Set();
+
+  async function loadStandings(leagueId) {
+    if (loadedLeagues.has(leagueId)) return; // already loaded, skip re-fetch
+    const cfg = LEAGUE_CONFIGS[leagueId];
+    if (!cfg) return;
+
+    const containerId = `${leagueId}-standings`;
+    const updatedId   = `${leagueId}-standings-updated`;
+    const container   = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;">Loading…</div>';
+
+    try {
+      const res = await withTimeout(fetch(`https://site.api.espn.com/apis/v2/sports/soccer/${cfg.slug}/standings`), 8000, null);
+      if (!res || !res.ok) throw new Error(`HTTP ${res?.status ?? 'timeout'}`);
+      const json = await res.json();
+      const entries = findEntries(json);
+      if (!entries?.length) throw new Error('No entries in response');
+      renderStandingsTable(entries, containerId, updatedId, leagueId);
+      loadedLeagues.add(leagueId);
+    } catch (e) {
+      console.error(`[Standings:${leagueId}]`, e);
+      container.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;">Standings unavailable — check back soon.</div>';
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // LIVE WORLD CUP GROUP STANDINGS — ESPN public API
+  // 2026 WC has 12 groups (A–L), 4 teams each, top 2 advance
+  // ---------------------------------------------------------------
+
+  let wcStandingsLoaded = false;
+
+  async function loadWcStandings() {
+    if (wcStandingsLoaded) return;
+    const container = document.getElementById('wc-groups-container');
+    const updatedEl = document.getElementById('wc-standings-updated');
+    if (!container) return;
+
+    container.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 0;grid-column:1/-1;">Loading groups…</div>';
+
+    try {
+      const res = await fetch('https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+
+      // ESPN returns groups under children[]
+      const groups = json?.children;
+      if (!Array.isArray(groups) || !groups.length) throw new Error('No groups in response');
+
+      container.innerHTML = '';
+
+      groups.forEach(function(group) {
+        const groupName = group.name || group.abbreviation || 'Group';
+        const entries = group?.standings?.entries;
+        if (!Array.isArray(entries) || !entries.length) return;
+
+        const stat = (entry, name) => {
+          const s = entry.stats?.find(s => s.name === name);
+          return s != null ? (s.displayValue ?? String(s.value)) : '–';
+        };
+
+        const card = document.createElement('div');
+        card.className = 'group-card';
+
+        // Group title
+        const title = document.createElement('div');
+        title.className = 'group-title';
+        title.textContent = groupName;
+        card.appendChild(title);
+
+        // Header row
+        const hdr = document.createElement('div');
+        hdr.className = 'wc-standings-row';
+        hdr.innerHTML = `
+          <span class="pos"></span>
+          <span class="live-team-name" style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:0.07em;">Team</span>
+          <span class="live-stat" style="color:var(--muted);font-size:9px;">P</span>
+          <span class="live-stat" style="color:var(--muted);font-size:9px;">W</span>
+          <span class="live-stat" style="color:var(--muted);font-size:9px;">D</span>
+          <span class="live-stat" style="color:var(--muted);font-size:9px;">L</span>
+          <span class="live-stat" style="color:var(--muted);font-size:9px;">GD</span>
+          <span class="pts" style="color:var(--muted);font-size:9px;">Pts</span>`;
+        card.appendChild(hdr);
+
+        // Sort by rank ascending so positions are always 1→4 top to bottom
+        const sorted = entries.slice().sort(function(a, b) {
+          const ra = parseInt((a.stats?.find(s => s.name === 'rank') || {}).value, 10) || 99;
+          const rb = parseInt((b.stats?.find(s => s.name === 'rank') || {}).value, 10) || 99;
+          return ra - rb;
+        });
+
+        sorted.forEach(function(entry, idx) {
+          const rank = parseInt(stat(entry, 'rank'), 10) || (idx + 1);
+          const gp   = stat(entry, 'gamesPlayed');
+          const wins = stat(entry, 'wins');
+          const draw = stat(entry, 'ties');
+          const loss = stat(entry, 'losses');
+          const pts  = stat(entry, 'points');
+          let gd     = stat(entry, 'pointDifferential') !== '–' ? stat(entry, 'pointDifferential') : stat(entry, 'goalDifference');
+          const gdNum = parseInt(gd, 10);
+          const gdDisplay = gd !== '–' && gdNum > 0 ? `+${gd}` : gd;
+          const gdColor = isNaN(gdNum) || gdNum === 0 ? 'var(--muted)' : gdNum > 0 ? 'var(--accent)' : 'var(--accent2)';
+          const name = entry.team?.shortDisplayName ?? entry.team?.displayName ?? '–';
+          // Top 2 advance (accent), rest plain
+          const rankColor = rank <= 2 ? 'var(--accent)' : rank === 3 ? 'var(--muted)' : 'var(--accent2)';
+
+          const row = document.createElement('div');
+          row.className = 'wc-standings-row';
+          row.innerHTML = `
+            <span class="pos" style="color:${rankColor}">${rank}</span>
+            <span class="live-team-name">${name}</span>
+            <span class="live-stat">${gp}</span>
+            <span class="live-stat">${wins}</span>
+            <span class="live-stat">${draw}</span>
+            <span class="live-stat">${loss}</span>
+            <span class="live-stat" style="color:${gdColor}">${gdDisplay}</span>
+            <span class="pts" style="color:var(--text)">${pts}</span>`;
+          card.appendChild(row);
+        });
+
+        container.appendChild(card);
+      });
+
+      if (updatedEl) updatedEl.textContent = '· live';
+      wcStandingsLoaded = true;
+
+    } catch (e) {
+      console.error('[WC Standings]', e);
+      // Fall back to static placeholder groups
+      container.innerHTML = `
+        <div class="group-card"><div class="group-title">Group A</div><div class="group-team">Brazil</div><div class="group-team">Germany</div><div class="group-team">Japan</div><div class="group-team">Morocco</div></div>
+        <div class="group-card"><div class="group-title">Group B</div><div class="group-team">France</div><div class="group-team">Argentina</div><div class="group-team">Mexico</div><div class="group-team">Senegal</div></div>
+        <div class="group-card"><div class="group-title">Group C</div><div class="group-team">England</div><div class="group-team">Spain</div><div class="group-team">USA</div><div class="group-team">Iran</div></div>
+        <div class="group-card"><div class="group-title">Group D</div><div class="group-team">Portugal</div><div class="group-team">Netherlands</div><div class="group-team">Ecuador</div><div class="group-team">Cameroon</div></div>`;
+      if (updatedEl) updatedEl.textContent = '· unavailable';
+    }
+  }
+
+  // Tab click handler
+  document.getElementById('tabs').addEventListener('click', function(e) {
+    const tab = e.target.closest('.nav-tab');
+    if (!tab) return;
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if (LEAGUE_CONFIGS[tab.dataset.tab]) loadStandings(tab.dataset.tab);
+    if (tab.dataset.tab === 'wc') loadWcStandings();
+    if (tab.dataset.tab === 'ks') loadKsStandings();
+  });
+</script>
+ <!-- BANANA LAMP -->
